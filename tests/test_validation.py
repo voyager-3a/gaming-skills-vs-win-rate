@@ -155,3 +155,20 @@ def test_headcount_ambush():
     for mode in ("linear", "square"):
         g = _run(sim_overrides={"ambush_team": mode}).games
         assert (g["kills_a"] == g["deaths_b"]).all()
+
+
+def test_teammate_support():
+    """γ = 0이면 기본과 같고, 실력 0이면 γ와 무관하다. γ가 크면 판 킬−데스가 팀원 평균 실력을 따라간다."""
+    kw = dict(n_users=640, max_games=60, checkpoints=[60])
+    a = _run(**kw)
+    b = _run(**kw, sim_overrides={"teammate_gamma": 0.0})
+    assert np.array_equal(a.wins, b.wins) and np.array_equal(a.kills, b.kills)
+    z0 = _run(**kw, zero_power=True)
+    z4 = _run(**kw, zero_power=True, sim_overrides={"teammate_gamma": 4.0})
+    assert np.array_equal(z0.wins, z4.wins)
+    r = _run(**kw, sim_overrides={"teammate_gamma": 4.0}, store_slots=True)
+    s = r.users.s[r.schedule]
+    team = np.repeat([[0, 1]], 16, axis=1)[0]
+    tsum = np.stack([s[:, :16].sum(1), s[:, 16:].sum(1)], 1)[:, team]
+    mates = (tsum - s) / 15
+    assert np.corrcoef(r.slot_net.ravel(), mates.ravel())[0, 1] > 0.1

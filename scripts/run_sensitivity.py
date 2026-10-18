@@ -106,6 +106,8 @@ def label(cfg, v):
     parts = []
     if "ambush_team" in p:
         parts.append({"coin": "기습 팀 동전", "square": "기습 팀 제곱 비례", "linear": "기습 팀 정비례"}[p["ambush_team"]])
+    if "teammate_gamma" in p:
+        parts.append(f"팀원 지원 γ {p['teammate_gamma']}")
     if "p_steal" in p:
         parts.append(f"킬 스틸 {p['p_steal']}")
     if "p_leave" in p:

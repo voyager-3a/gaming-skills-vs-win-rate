@@ -186,6 +186,42 @@ ambush_team = "square"
 squad_frac = 0.3
 squad_corr = 0.0
 
+# 팀원 지원: 모든 교전에서 전투력 += γ × (본인 뺀 살아 있는 같은 팀원의 실력+장비 평균)
+# 팀원 15명 평균의 표준편차 ≈ 1/√15 ≈ 0.26이므로 γ = 4면 개인 실력과 비슷한 크기
+[variants.gamma1]
+teammate_gamma = 1.0
+
+[variants.gamma2]
+teammate_gamma = 2.0
+
+[variants.gamma4]
+teammate_gamma = 4.0
+
+[variants.squad30_g1]
+squad_frac = 0.3
+squad_corr = 0.0
+teammate_gamma = 1.0
+
+[variants.squad30_g2]
+squad_frac = 0.3
+squad_corr = 0.0
+teammate_gamma = 2.0
+
+[variants.squad30_g4]
+squad_frac = 0.3
+squad_corr = 0.0
+teammate_gamma = 4.0
+
+[variants.combo_real_g2]
+p_steal = 0.3
+p_leave = 0.2
+leave_mode = "skill"
+squad_frac = 0.3
+squad_corr = 0.0
+squad_p_play = 0.5
+squad_bonus = 0.5
+teammate_gamma = 2.0
+
 # 민감도 묶음 ("base" = 기본 설정 시드 0 실행)
 [sensitivity]
 steal = ["base", "steal15", "steal30", "steal50"]
@@ -198,6 +234,9 @@ combo = ["base", "combo", "combo_real"]
 ambush_team = ["amb_coin", "base", "amb_square"]
 ambush_team_leave = ["amb_coin_leave", "leave_skill20", "amb_square_leave"]
 ambush_team_squad = ["amb_coin_squad", "squad30_r0", "amb_square_squad"]
+teammate = ["base", "gamma1", "gamma2", "gamma4"]
+teammate_squad = ["squad30_r0", "squad30_g1", "squad30_g2", "squad30_g4"]
+teammate_combo = ["combo_real", "combo_real_g2"]
 
 # 보정 결과: k별 돌격·저격 점령 가중치 (k 적용 후의 최종값). 비어 있으면 위 표 + k 규칙 사용.
 [calibration]

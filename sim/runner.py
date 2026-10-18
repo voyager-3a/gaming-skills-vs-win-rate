@@ -26,6 +26,7 @@ class RunResult:
     squad: np.ndarray | None = None  # 유저별 분대 번호 (-1 = 솔로)
     schedule: np.ndarray | None = None  # (판, 32) 유저 배치
     in_squad: np.ndarray | None = None  # (판, 32) 분대로 참여 중인지
+    slot_net: np.ndarray | None = None  # (판, 32) 그 판의 킬 − 데스 (store_slots일 때만)
 
     def winrate(self, i: int) -> np.ndarray:
         return self.wins[i] / self.checkpoints[i]
@@ -37,10 +38,11 @@ class RunResult:
 def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: float, k: float,
         seed: int, sigma: float | None = None, variant: str | None = None,
         capture_override: dict | None = None, sim_overrides: dict | None = None,
-        zero_power: bool = False, zero_style: bool = False) -> RunResult:
+        zero_power: bool = False, zero_style: bool = False, store_slots: bool = False) -> RunResult:
     """variant: 설정 파일 [variants]의 기본 설정 전용 변형 (파라미터와 보정값을 함께 바꾼다).
     zero_power: 판에서 s, e를 0으로 둔다 (s는 상관 계산용으로만 남김).
-    zero_style: 전원을 올라운드로 둔다."""
+    zero_style: 전원을 올라운드로 둔다.
+    store_slots: 판·슬롯별 (킬 − 데스)를 RunResult.slot_net에 남긴다 (판 단위 분석용)."""
     t0 = time.perf_counter()
     variant_sim = cfg.get("variants", {}).get(variant, {}) if variant else {}
     sim = {**cfg["sim"], **variant_sim, **(sim_overrides or {})}
@@ -92,12 +94,15 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
     tot = np.zeros((4, n_users), dtype=np.int64)  # 판수, 승, 킬, 데스
     snap = np.zeros((3, len(cps), n_users), dtype=np.int64)
     records = []
+    slot_net = []
 
     for start in range(0, len(sched), chunk):
         su = sched[start:start + chunk]
         power_slot = power_u[su] + bonus * in_squad[start:start + chunk] if bonus else power_u[su]
         res = play_games(power_slot, users.style[su], sp, sim, rng, steal_rng,
-                         None if leave_u is None else leave_u[su], leave_rng)
+                         None if leave_u is None else leave_u[su], leave_rng, team_power=power_u[su])
+        if store_slots:
+            slot_net.append((res.kills - res.deaths).astype(np.int16))
         for r0 in range(0, len(su), per_round):
             ru = su[r0:r0 + per_round].ravel()
             sl = slice(r0, r0 + per_round)
@@ -147,4 +152,4 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
     games["outnumbered"] = games["winner_max_alive_deficit"] >= sim["outnumbered_deficit"]
     return RunResult(users=users, checkpoints=cps, wins=snap[0], kills=snap[1], deaths=snap[2],
                      games=games, seconds=time.perf_counter() - t0, squad=squad, schedule=sched,
-                     in_squad=in_squad)
+                     in_squad=in_squad, slot_net=np.concatenate(slot_net) if store_slots else None)

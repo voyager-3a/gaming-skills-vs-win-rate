@@ -52,7 +52,8 @@ def _pick_ambush(aw: np.ndarray, tw: np.ndarray, u: np.ndarray, rows: np.ndarray
 
 def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
                rng: np.random.Generator, steal_rng: np.random.Generator | None = None,
-               p_leave: np.ndarray | None = None, leave_rng: np.random.Generator | None = None) -> GameResults:
+               p_leave: np.ndarray | None = None, leave_rng: np.random.Generator | None = None,
+               team_power: np.ndarray | None = None) -> GameResults:
     """power = s + e, style은 슬롯별 값 (B, 2×team_size). 앞 절반이 A팀.
     킬 스틸은 steal_rng로만 뽑으므로, 같은 rng면 p_steal과 무관하게 승패·데스가 같다.
     p_leave: 슬롯별 이탈 확률 (B, P). 죽을 때마다 이 확률로 판을 나가고 남은 목숨을 버린다 (leave_rng로 뽑음)."""
@@ -68,6 +69,9 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
     gap_scale = float(sim.get("ambush_gap_scale", 1.0))
     amb_cap = float(sim.get("ambush_cap", 0.6))
     p_steal = float(sim.get("p_steal", 0.0))
+    gamma = float(sim.get("teammate_gamma", 0.0))
+    if team_power is None:
+        team_power = power
     team_of = np.arange(P) >= ts
 
     ew = sp.engage[style]
@@ -100,13 +104,23 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
             break
         alive = lives > 0
 
+        # 팀원 지원: 교전마다 γ × (본인을 뺀 살아 있는 같은 팀원의 실력+장비 평균)을 전투력에 더한다
+        if gamma:
+            tp = np.where(alive, team_power, 0.0)
+            tsum = np.repeat(np.stack([tp[:, :ts].sum(1), tp[:, ts:].sum(1)], 1), ts, axis=1)
+            tcnt = np.repeat(np.stack([alive[:, :ts].sum(1), alive[:, ts:].sum(1)], 1), ts, axis=1)
+            mates = np.maximum(tcnt - 1, 1)
+            eff = power + gamma * np.where(tcnt > 1, (tsum - team_power) / mates, 0.0)
+        else:
+            eff = power
+
         # 3. 일반 교전: 양 팀에서 살아 있는 유저 한 명씩, 교전 가중치에 비례
         w = ew * alive
         ia = _pick(w[:, :ts], rng.random(B))
         ib = ts + _pick(w[:, ts:], rng.random(B))
         eps = sigma * rng.standard_normal((3, B))
-        pa = power[rows, ia] + eps[0]
-        pb = power[rows, ib] + eps[1]
+        pa = eff[rows, ia] + eps[0]
+        pb = eff[rows, ib] + eps[1]
 
         # 3'. 기습: 확률 p_ambush로 일반 교전 대신. 기습하는 팀은 동전으로 정한다.
         #     기습조 2명 중 전투력이 높은 쪽이 대표로 싸우고, 킬·데스도 대표가 진다.
@@ -130,11 +144,11 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
         att2 = np.where(amb_by_a, a2A, a2B)
         has2 = np.where(amb_by_a, has2A, has2B)
         tgt = np.where(amb_by_a, tgB, tgA)
-        p1 = power[rows, att1] + eps[0]
-        p2 = np.where(has2, power[rows, att2] + eps[2], -np.inf)
+        p1 = eff[rows, att1] + eps[0]
+        p2 = np.where(has2, eff[rows, att2] + eps[2], -np.inf)
         rep = np.where(p2 > p1, att2, att1)
         p_att = np.maximum(p1, p2)
-        p_tgt = power[rows, tgt] + eps[1]
+        p_tgt = eff[rows, tgt] + eps[1]
         ia = np.where(amb, np.where(amb_by_a, rep, tgt), ia)
         ib = np.where(amb, np.where(amb_by_a, tgt, rep), ib)
         pa = np.where(amb, np.where(amb_by_a, p_att, p_tgt), pa)
