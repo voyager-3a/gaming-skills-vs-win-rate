@@ -135,6 +135,16 @@ def report(cfg, checks=None):
                 f"{'예' if r['recalibrated'] is True else ('아니오' if r['recalibrated'] is False else '-')} | "
                 f"{chk} | {r['leaves_per_game']:.1f} |")
         lines.append("")
+    rec = [(v, c) for v, c in checks.items() if c["recalibrated"]]
+    if rec:
+        lines += ["## 재보정한 변형", "", "| 변형 | 돌격 / 저격 점령 가중치 | 재보정 후 승률 (돌격/올라운드/저격) | 허용 오차 안 |",
+                  "|---|---|---|---|"]
+        for v, c in rec:
+            w = c["after_winrate"]
+            lines.append(f"| {v} | {c['capture']['assault']} / {c['capture']['sniper']} | "
+                         f"{w['assault']:.4f} / {w['allround']:.4f} / {w['sniper']:.4f} | "
+                         f"{'예' if c['after_within_tolerance'] else '아니오'} |")
+        lines.append("")
     (OUT / "REPORT.md").write_text("\n".join(lines))
     print("\n".join(lines))
 

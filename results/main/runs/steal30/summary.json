@@ -5,7 +5,7 @@
   "sigma": 1.0,
   "variant": "steal30",
   "seed": 0,
-  "seconds": 17.67113093199987,
+  "seconds": 17.92799292100017,
   "crossover": Infinity,
   "summary": {
     "n_games": 62558,
@@ -32,7 +32,8 @@
     "ambush_success": 0.6745536368393511,
     "ambush_kill_rate": 0.3763914181057038,
     "ambush_share_of_kills": 0.124794101634244,
-    "team_a_winrate": 0.5021579973784328
+    "team_a_winrate": 0.5021579973784328,
+    "leaves_per_game": 0.0
   },
   "outnumbered_carry": {
     "n": 10,

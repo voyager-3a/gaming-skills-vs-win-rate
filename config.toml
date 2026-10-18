@@ -136,10 +136,24 @@ seed = 7
 # "변형:k=값" = { assault = ..., sniper = ... }  (scripts/calibrate.py가 채운다)
 "base:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
 "base:k=1.0" = { assault = 0.6285, sniper = 0.4854 }
+"combo:k=0.5" = { assault = 0.5758, sniper = 0.4587 }
 "kill35:k=0.5" = { assault = 0.5158, sniper = 0.495 }
 "kill69:k=0.5" = { assault = 0.581, sniper = 0.4597 }
+"leave_flat10:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"leave_flat20:k=0.5" = { assault = 0.5655, sniper = 0.4532 }
+"leave_flat30:k=0.5" = { assault = 0.6105, sniper = 0.4483 }
+"leave_skill10:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"leave_skill20:k=0.5" = { assault = 0.5655, sniper = 0.4532 }
+"leave_skill30:k=0.5" = { assault = 0.6105, sniper = 0.4483 }
 "no_ambush:k=0.5" = { assault = 0.5604, sniper = 0.4786 }
 "one_life:k=0.5" = { assault = 0.75, sniper = 0.3 }
+"squad30_r0:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"squad30_r5:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"squad60_r0:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"squad60_r5:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"steal15:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"steal30:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"steal50:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
 
 [grid]
 q = [0.0, 0.05, 0.15]

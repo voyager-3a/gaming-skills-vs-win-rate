@@ -1,0 +1,47 @@
+{
+  "name": "leave_skill30",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "leave_skill30",
+  "seed": 0,
+  "seconds": 14.082827904999704,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 62558,
+    "end_reason": {
+      "ticket": 0.9955081684197065,
+      "wipe": 0.004491831580293488,
+      "turn_limit": 0.0
+    },
+    "ended_before_limit": 1.0,
+    "turns_mean": 56.91642955337447,
+    "turns_p10_p50_p90": [
+      34.0,
+      54.0,
+      85.0
+    ],
+    "ticket_loss_share_kill": 0.4819785467035789,
+    "ticket_loss_share_capture": 0.5180214532964211,
+    "kills_per_game_per_team": 17.00624220723169,
+    "max_kills_one_game": 18,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.06817673199271077,
+    "outnumbered_rate": 0.0019501902234726174,
+    "ambush_per_turn": 0.19994534595225832,
+    "ambush_success": 0.6767085111971693,
+    "ambush_kill_rate": 0.37490255238994213,
+    "ambush_share_of_kills": 0.12543796201908775,
+    "team_a_winrate": 0.4968349371782985,
+    "leaves_per_game": 11.065938808785447
+  },
+  "outnumbered_carry": {
+    "n": 122,
+    "s_mean": 1.1055173873430835,
+    "style_counts": {
+      "assault": 89,
+      "allround": 26,
+      "sniper": 7
+    }
+  }
+}
