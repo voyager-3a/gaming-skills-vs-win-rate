@@ -1,0 +1,45 @@
+{
+  "name": "q0.15_k1.0_s3.0",
+  "q": 0.15,
+  "k": 1.0,
+  "sigma": 3.0,
+  "variant": null,
+  "seed": 42,
+  "seconds": 15.75157488900004,
+  "crossover": 277.83241177821816,
+  "summary": {
+    "n_games": 62558,
+    "end_reason": {
+      "ticket": 0.9998401483423384,
+      "wipe": 0.0,
+      "turn_limit": 0.00015985165766168994
+    },
+    "ended_before_limit": 0.9998241631765722,
+    "turns_mean": 70.9185875507529,
+    "turns_p10_p50_p90": [
+      49.0,
+      69.0,
+      96.0
+    ],
+    "ticket_loss_share_kill": 0.5814646108832492,
+    "ticket_loss_share_capture": 0.4185353891167508,
+    "kills_per_game_per_team": 22.18151155727485,
+    "max_kills_one_game": 14,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.06411649988810383,
+    "outnumbered_rate": 0.0006713769621790978,
+    "ambush_per_turn": 0.2001401998185517,
+    "ambush_success": 0.6777865747972525,
+    "ambush_kill_rate": 0.31770629792764493,
+    "ambush_share_of_kills": 0.10164806061553829,
+    "team_a_winrate": 0.49510853927555226
+  },
+  "outnumbered_carry": {
+    "n": 42,
+    "s_mean": 0.45740085794571933,
+    "style_counts": {
+      "assault": 26,
+      "allround": 16
+    }
+  }
+}

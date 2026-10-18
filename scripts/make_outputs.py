@@ -25,6 +25,7 @@ NEUTRAL = "#eeede9"
 
 plt.rcParams.update({
     "font.family": ["WenQuanYi Zen Hei", "DejaVu Sans"], "axes.unicode_minus": False,
+    "font.weight": 500,
     "figure.facecolor": SURF, "axes.facecolor": SURF, "savefig.facecolor": SURF,
     "axes.edgecolor": AXIS, "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK2,
     "text.color": INK, "axes.grid": True, "grid.color": GRID, "grid.linewidth": 0.6,
@@ -131,6 +132,11 @@ def result_map(runs, corr, g):
     return df
 
 
+INT_COLS = {"games", "user", "kills", "deaths", "game", "turns", "max_kills", "max_kills_user", "max_deaths",
+            "max_deaths_user", "carry_kills", "max_alive_deficit", "winner_max_deficit", "users", "n",
+            "crossover", "reason"}
+
+
 def md_table(df, floatfmt=3):
     cols = list(df.columns)
     out = ["| " + " | ".join(map(str, cols)) + " |", "|" + "---|" * len(cols)]
@@ -138,8 +144,14 @@ def md_table(df, floatfmt=3):
         cells = []
         for c in cols:
             v = r[c]
-            cells.append(f"{v:.{floatfmt}f}" if isinstance(v, (float, np.floating)) and np.isfinite(v)
-                         else ("> 1000" if isinstance(v, float) and np.isinf(v) else str(v)))
+            if isinstance(v, (float, np.floating)) and np.isinf(v):
+                cells.append("> 1000")
+            elif isinstance(v, (float, np.floating)) and c in INT_COLS:
+                cells.append(f"{v:.0f}")
+            elif isinstance(v, (float, np.floating)):
+                cells.append(f"{v:.{floatfmt}f}")
+            else:
+                cells.append(str(v))
         out.append("| " + " | ".join(cells) + " |")
     return "\n".join(out)
 

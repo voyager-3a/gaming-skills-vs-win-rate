@@ -1,0 +1,46 @@
+{
+  "name": "kill69",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "kill69",
+  "seed": 0,
+  "seconds": 16.00862752099988,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 62558,
+    "end_reason": {
+      "ticket": 0.9989289938936666,
+      "wipe": 0.0,
+      "turn_limit": 0.0010710061063333226
+    },
+    "ended_before_limit": 0.9986892164071741,
+    "turns_mean": 89.15873269605805,
+    "turns_p10_p50_p90": [
+      65.0,
+      87.0,
+      117.0
+    ],
+    "ticket_loss_share_kill": 0.6880788140429079,
+    "ticket_loss_share_capture": 0.3119211859570922,
+    "kills_per_game_per_team": 26.675557083026952,
+    "max_kills_one_game": 18,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.02253908373029828,
+    "outnumbered_rate": 0.0012308577639950126,
+    "ambush_per_turn": 0.19972687138105477,
+    "ambush_success": 0.6761673077527278,
+    "ambush_kill_rate": 0.37530868630469616,
+    "ambush_share_of_kills": 0.12526954741203025,
+    "team_a_winrate": 0.5014866204162537
+  },
+  "outnumbered_carry": {
+    "n": 77,
+    "s_mean": 1.279436295018532,
+    "style_counts": {
+      "assault": 45,
+      "allround": 19,
+      "sniper": 13
+    }
+  }
+}
