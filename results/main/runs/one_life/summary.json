@@ -1,0 +1,47 @@
+{
+  "name": "one_life",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "one_life",
+  "seed": 0,
+  "seconds": 9.376238216000274,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 62558,
+    "end_reason": {
+      "ticket": 0.5731641037117555,
+      "wipe": 0.42683589628824453,
+      "turn_limit": 0.0
+    },
+    "ended_before_limit": 1.0,
+    "turns_mean": 38.4895137312574,
+    "turns_p10_p50_p90": [
+      23.0,
+      39.0,
+      54.0
+    ],
+    "ticket_loss_share_kill": 0.3750997400120083,
+    "ticket_loss_share_capture": 0.6249002599879917,
+    "kills_per_game_per_team": 11.248921001310784,
+    "max_kills_one_game": 13,
+    "max_deaths_one_game": 1,
+    "comeback_rate": 0.14955721090827712,
+    "outnumbered_rate": 0.047523897822820425,
+    "ambush_per_turn": 0.22779294359603078,
+    "ambush_success": 0.6752278089139924,
+    "ambush_kill_rate": 0.36985447212873257,
+    "ambush_share_of_kills": 0.144136078782453,
+    "team_a_winrate": 0.5009271396144378,
+    "leaves_per_game": 0.0
+  },
+  "outnumbered_carry": {
+    "n": 2973,
+    "s_mean": 1.398354992275078,
+    "style_counts": {
+      "assault": 1099,
+      "sniper": 951,
+      "allround": 923
+    }
+  }
+}

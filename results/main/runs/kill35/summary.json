@@ -1,0 +1,43 @@
+{
+  "name": "kill35",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "kill35",
+  "seed": 0,
+  "seconds": 10.563243891000639,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 62558,
+    "end_reason": {
+      "ticket": 1.0,
+      "wipe": 0.0,
+      "turn_limit": 0.0
+    },
+    "ended_before_limit": 1.0,
+    "turns_mean": 39.419019150228586,
+    "turns_p10_p50_p90": [
+      25.0,
+      38.0,
+      56.0
+    ],
+    "ticket_loss_share_kill": 0.35169275016843277,
+    "ticket_loss_share_capture": 0.6483072498315673,
+    "kills_per_game_per_team": 12.011645193260653,
+    "max_kills_one_game": 10,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.08849387768151155,
+    "outnumbered_rate": 0.0,
+    "ambush_per_turn": 0.203380001824836,
+    "ambush_success": 0.6729467828444958,
+    "ambush_kill_rate": 0.3784160468964967,
+    "ambush_share_of_kills": 0.12628480971807546,
+    "team_a_winrate": 0.5012628280955274,
+    "leaves_per_game": 0.0
+  },
+  "outnumbered_carry": {
+    "n": 0,
+    "s_mean": null,
+    "style_counts": {}
+  }
+}
