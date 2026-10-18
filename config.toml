@@ -207,12 +207,12 @@ max_games = 1000
 seed = 7
 [calibration.capture]
 # "변형:k=값" = { assault = ..., sniper = ... }  (scripts/calibrate.py가 채운다)
-"base:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"base:k=1.0" = { assault = 0.6285, sniper = 0.4854 }
+"base:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"base:k=1.0" = { assault = 0.6228, sniper = 0.4883 }
 "combo:k=0.5" = { assault = 0.5758, sniper = 0.4587 }
 "combo_real:k=0.5" = { assault = 0.5784, sniper = 0.455 }
-"kill35:k=0.5" = { assault = 0.5158, sniper = 0.495 }
-"kill69:k=0.5" = { assault = 0.581, sniper = 0.4597 }
+"kill35:k=0.5" = { assault = 0.5181, sniper = 0.4968 }
+"kill69:k=0.5" = { assault = 0.5785, sniper = 0.4515 }
 "leave_flat10:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
 "leave_flat20:k=0.5" = { assault = 0.5655, sniper = 0.4532 }
 "leave_flat30:k=0.5" = { assault = 0.6105, sniper = 0.4483 }

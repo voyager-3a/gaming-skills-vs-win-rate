@@ -1,0 +1,47 @@
+{
+  "name": "q0.0_k1.0_s1.0",
+  "q": 0.0,
+  "k": 1.0,
+  "sigma": 1.0,
+  "variant": null,
+  "seed": 42,
+  "seconds": 15.978076762000455,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 62558,
+    "end_reason": {
+      "ticket": 0.9999680296684677,
+      "wipe": 0.0,
+      "turn_limit": 3.197033153233799e-05
+    },
+    "ended_before_limit": 0.9999680296684677,
+    "turns_mean": 69.13312446050065,
+    "turns_p10_p50_p90": [
+      47.0,
+      67.0,
+      95.0
+    ],
+    "ticket_loss_share_kill": 0.5738036882216775,
+    "ticket_loss_share_capture": 0.4261963117783226,
+    "kills_per_game_per_team": 21.384938776815115,
+    "max_kills_one_game": 17,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.05498897023562134,
+    "outnumbered_rate": 0.0004635698072189009,
+    "ambush_per_turn": 0.21154611857575906,
+    "ambush_success": 0.6954315275641846,
+    "ambush_kill_rate": 0.3232404380364651,
+    "ambush_share_of_kills": 0.11052968345767937,
+    "team_a_winrate": 0.49918475654592537,
+    "leaves_per_game": 0.0
+  },
+  "outnumbered_carry": {
+    "n": 29,
+    "s_mean": 1.02020264395812,
+    "style_counts": {
+      "assault": 21,
+      "allround": 7,
+      "sniper": 1
+    }
+  }
+}
