@@ -83,3 +83,13 @@ def test_ambush_best_of_two():
 def test_no_ambush_when_p_zero():
     g = _run(sim_overrides={"p_ambush": 0.0}).games
     assert g["ambush"].sum() == 0
+
+
+def test_kill_steal_keeps_outcomes():
+    """킬 스틸은 킬 기록만 옮긴다: 같은 시드면 승패·데스·판별 킬 합이 그대로."""
+    a = _run(n_users=320, max_games=100, checkpoints=[100])
+    b = _run(n_users=320, max_games=100, checkpoints=[100], sim_overrides={"p_steal": 0.3})
+    assert np.array_equal(a.wins, b.wins) and np.array_equal(a.deaths, b.deaths)
+    assert a.kills.sum() == b.kills.sum() and not np.array_equal(a.kills, b.kills)
+    for col in ["kills_a", "kills_b", "deaths_a", "deaths_b", "winner", "turns"]:
+        assert a.games[col].equals(b.games[col])

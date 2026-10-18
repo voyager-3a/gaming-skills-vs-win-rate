@@ -41,6 +41,7 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
     if sigma is not None:
         sim["sigma"] = sigma
     rng = np.random.default_rng(seed)
+    steal_rng = np.random.default_rng([seed, 1])
     users = make_users(n_users, q, sim["equip_strength"], rng)
     if zero_style:
         users.style[:] = 1
@@ -61,7 +62,7 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
 
     for start in range(0, len(sched), chunk):
         su = sched[start:start + chunk]
-        res = play_games(power_u[su], users.style[su], sp, sim, rng)
+        res = play_games(power_u[su], users.style[su], sp, sim, rng, steal_rng)
         for r0 in range(0, len(su), per_round):
             ru = su[r0:r0 + per_round].ravel()
             sl = slice(r0, r0 + per_round)

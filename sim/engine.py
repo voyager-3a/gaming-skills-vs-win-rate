@@ -50,13 +50,16 @@ def _pick_ambush(aw: np.ndarray, tw: np.ndarray, u: np.ndarray, rows: np.ndarray
 
 
 def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
-               rng: np.random.Generator) -> GameResults:
-    """power = s + e, style은 슬롯별 값 (B, 2×team_size). 앞 절반이 A팀."""
+               rng: np.random.Generator, steal_rng: np.random.Generator | None = None) -> GameResults:
+    """power = s + e, style은 슬롯별 값 (B, 2×team_size). 앞 절반이 A팀.
+    킬 스틸은 steal_rng로만 뽑으므로, 같은 rng면 p_steal과 무관하게 승패·데스가 같다."""
     B, P = power.shape
     ts = P // 2
     T, d, c = float(sim["tickets"]), float(sim["ticket_per_death"]), float(sim["capture_coef"])
     K, sigma = int(sim["turn_limit"]), float(sim["sigma"])
     p_ambush = float(sim["p_ambush"])
+    p_steal = float(sim.get("p_steal", 0.0))
+    team_of = np.arange(P) >= ts
 
     ew = sp.engage[style]
     pdie = sp.p_die[style]
@@ -128,11 +131,20 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
         n_amb_win += att_won
         n_amb_kill += att_won & die
 
+        # 5'. 킬 스틸: 확률 p_steal로 킬 기록이 이긴 쪽 팀의 다른 살아 있는 유저에게 간다
+        credit = win_slot
+        if p_steal > 0:
+            steal = die & (steal_rng.random(B) < p_steal)
+            mates = alive & (team_of[None, :] == (win_slot >= ts)[:, None])
+            mates[rows, win_slot] = False
+            pick = _pick(mates.astype(float), steal_rng.random(B))
+            credit = np.where(steal & mates.any(axis=1), pick, win_slot)
+
         # 5. 데스 처리
         r = rows[die]
         lives[r, los[die]] -= 1
         deaths[r, los[die]] += 1
-        kills[r, win_slot[die]] += 1
+        kills[r, credit[die]] += 1
         tickets[r, (los[die] >= ts).astype(np.int64)] -= d
         loss_kill[die] += d
 
