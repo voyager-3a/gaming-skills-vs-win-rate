@@ -96,47 +96,43 @@ def make_schedule_squads(n: int, max_games: int, team_size: int, squad: np.ndarr
                          rng: np.random.Generator) -> np.ndarray:
     """make_schedule과 같되, 분대는 쪼개지 않고 항상 같은 팀에 넣는다.
 
-    라운드마다 판수가 적은 단위(분대 또는 솔로)부터 정원까지 뽑고, 분대를 큰 것부터
-    빈자리가 충분한 무작위 팀에 넣은 뒤 솔로로 채운다. 팀 순서를 섞어 판(A팀, B팀)을 만든다.
+    라운드마다 단위(분대 또는 솔로)를 판수가 적은 순(동률 무작위)으로 훑으며, 분대는 빈자리가
+    충분한 무작위 팀에 바로 넣고(자리가 없으면 이번 라운드를 쉼), 솔로는 남은 자리를 같은 순서로 채운다.
+    팀 순서를 섞어 판(A팀, B팀)을 만든다.
     """
     per_game = 2 * team_size
     n_games = n // per_game
     per_round = n_games * per_game
+    n_squads = squad.max() + 1
+    members = [np.flatnonzero(squad == i) for i in range(n_squads)]
     solo = np.flatnonzero(squad < 0)
-    units = [np.flatnonzero(squad == i) for i in range(squad.max() + 1)] + [np.array([u]) for u in solo]
-    sizes = np.array([len(u) for u in units])
+    lead = np.concatenate([[m[0] for m in members], solo]).astype(np.int64)  # 단위의 대표 유저
+    is_squad = np.arange(len(lead)) < n_squads
     games = np.zeros(n, dtype=np.int64)
     rounds = []
     while games.min() < max_games:
-        ug = np.array([games[u[0]] for u in units])
-        order = np.argsort(ug + rng.random(len(units)), kind="stable")
-        chosen, filled = [], 0
-        for i in order:
-            if filled + sizes[i] <= per_round:
-                chosen.append(i)
-                filled += sizes[i]
-                if filled == per_round:
-                    break
+        order = np.argsort(games[lead] + rng.random(len(lead)), kind="stable")
         teams = [[] for _ in range(2 * n_games)]
         room = np.full(2 * n_games, team_size)
-        leftover = []
-        for i in sorted(chosen, key=lambda i: -sizes[i]):
-            ok = np.flatnonzero(room >= sizes[i])
-            if len(ok) == 0:
-                leftover.append(i)
+        n_solo_slots = per_round
+        for i in order[is_squad[order]]:
+            m = members[i]
+            ok = np.flatnonzero(room >= len(m))
+            # 남는 자리를 솔로가 채울 수 있을 때만 분대를 넣는다
+            if len(ok) == 0 or n_solo_slots - len(m) < 0:
                 continue
-            t = ok[rng.integers(len(ok))] if sizes[i] > 1 else ok[0]
-            teams[t].extend(units[i].tolist())
-            room[t] -= sizes[i]
-        if leftover:  # 분대가 들어갈 자리가 없으면 그 분대는 이번 라운드를 쉬고 솔로로 채운다
-            rest = [i for i in order if i not in set(chosen) and sizes[i] == 1]
-            for t in np.flatnonzero(room > 0):
-                while room[t] > 0 and rest:
-                    teams[t].append(int(units[rest.pop(0)][0]))
-                    room[t] -= 1
-        if (room > 0).any():
+            tm = ok[rng.integers(len(ok))]
+            teams[tm].extend(m.tolist())
+            room[tm] -= len(m)
+            n_solo_slots -= len(m)
+        solos = lead[order[~is_squad[order]]]
+        if len(solos) < room.sum():
             raise RuntimeError("분대 배치 실패: 솔로가 부족하다")
-        tarr = np.array([rng.permutation(t) for t in teams])[rng.permutation(2 * n_games)]
+        pos = 0
+        for tm in range(2 * n_games):
+            teams[tm].extend(solos[pos:pos + room[tm]].tolist())
+            pos += room[tm]
+        tarr = np.array([rng.permutation(tm) for tm in teams])[rng.permutation(2 * n_games)]
         rnd = tarr.reshape(n_games, per_game)
         games[rnd.ravel()] += 1
         rounds.append(rnd)
