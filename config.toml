@@ -63,7 +63,10 @@ seed = 7
 # "변형:k=값" = { assault = ..., sniper = ... }  (scripts/calibrate.py가 채운다)
 "base:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
 "base:k=1.0" = { assault = 0.6285, sniper = 0.4854 }
+"c_kill30:k=0.5" = { assault = 0.5158, sniper = 0.495 }
 "c_kill70:k=0.5" = { assault = 0.581, sniper = 0.4597 }
+"no_ambush:k=0.5" = { assault = 0.5604, sniper = 0.4786 }
+"one_life:k=0.5" = { assault = 0.75, sniper = 0.3 }
 
 [grid]
 q = [0.0, 0.05, 0.15]

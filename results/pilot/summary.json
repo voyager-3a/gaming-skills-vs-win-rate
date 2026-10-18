@@ -12,10 +12,28 @@
     "k": 0.5,
     "seed": 0
   },
-  "capture_coef": 1.459,
-  "by_sigma": {
+  "sim": {
+    "capture_coef": 1.459,
+    "p_ambush": 0.2,
+    "lives": 3
+  },
+  "variants": {
+    "c_kill70": {
+      "capture_coef": 0.83
+    },
+    "c_kill30": {
+      "capture_coef": 12.504
+    },
+    "no_ambush": {
+      "p_ambush": 0.0
+    },
+    "one_life": {
+      "lives": 1
+    }
+  },
+  "cases": {
     "sigma=1.0": {
-      "seconds": 0.37910894600000233,
+      "seconds": 0.8376224510000156,
       "n_games": 3135,
       "end_reason": {
         "ticket": 1.0,
@@ -23,23 +41,27 @@
         "turn_limit": 0.0
       },
       "ended_before_limit": 1.0,
-      "turns_mean": 57.91674641148325,
+      "turns_mean": 77.09377990430622,
       "turns_p10_p50_p90": [
-        32.0,
-        56.0,
-        86.0
+        55.0,
+        76.0,
+        101.0
       ],
-      "ticket_loss_share_kill": 0.49735779462547225,
-      "ticket_loss_share_capture": 0.5026422053745278,
-      "kills_per_game_per_team": 17.676076555023922,
-      "max_kills_one_game": 11,
+      "ticket_loss_share_kill": 0.6129708753650694,
+      "ticket_loss_share_capture": 0.3870291246349305,
+      "kills_per_game_per_team": 23.209728867623603,
+      "max_kills_one_game": 13,
       "max_deaths_one_game": 3,
-      "comeback_rate": 0.05805422647527911,
-      "last_man_rate": 0.0,
-      "team_a_winrate": 0.49250398724082933
+      "comeback_rate": 0.0481658692185008,
+      "outnumbered_rate": 0.0,
+      "ambush_per_turn": 0.2005387088365627,
+      "ambush_success": 0.6719072377651234,
+      "ambush_kill_rate": 0.37430882231575474,
+      "ambush_share_of_kills": 0.12466586497165436,
+      "team_a_winrate": 0.5043062200956938
     },
     "sigma=2.0": {
-      "seconds": 0.27405937300000005,
+      "seconds": 0.8158621189999167,
       "n_games": 3135,
       "end_reason": {
         "ticket": 1.0,
@@ -47,23 +69,27 @@
         "turn_limit": 0.0
       },
       "ended_before_limit": 1.0,
-      "turns_mean": 58.30175438596491,
+      "turns_mean": 78.74385964912281,
       "turns_p10_p50_p90": [
-        32.0,
-        56.0,
-        88.0
+        57.0,
+        77.0,
+        103.0
       ],
-      "ticket_loss_share_kill": 0.4993217758021147,
-      "ticket_loss_share_capture": 0.5006782241978853,
-      "kills_per_game_per_team": 17.78421052631579,
-      "max_kills_one_game": 11,
+      "ticket_loss_share_kill": 0.6197739770082515,
+      "ticket_loss_share_capture": 0.38022602299174846,
+      "kills_per_game_per_team": 23.7347687400319,
+      "max_kills_one_game": 12,
       "max_deaths_one_game": 3,
-      "comeback_rate": 0.06188197767145136,
-      "last_man_rate": 0.0,
-      "team_a_winrate": 0.48484848484848486
+      "comeback_rate": 0.0405103668261563,
+      "outnumbered_rate": 0.0006379585326953748,
+      "ambush_per_turn": 0.20010370166327746,
+      "ambush_success": 0.6680634843515931,
+      "ambush_kill_rate": 0.37444835823312683,
+      "ambush_share_of_kills": 0.1242935954897626,
+      "team_a_winrate": 0.49633173843700157
     },
     "sigma=3.0": {
-      "seconds": 0.28901506100000063,
+      "seconds": 0.7307628590000377,
       "n_games": 3135,
       "end_reason": {
         "ticket": 1.0,
@@ -71,20 +97,136 @@
         "turn_limit": 0.0
       },
       "ended_before_limit": 1.0,
-      "turns_mean": 58.72408293460925,
+      "turns_mean": 79.6414673046252,
       "turns_p10_p50_p90": [
-        32.0,
-        57.0,
-        88.0
+        58.0,
+        78.0,
+        104.0
       ],
-      "ticket_loss_share_kill": 0.5025897496635793,
-      "ticket_loss_share_capture": 0.4974102503364208,
-      "kills_per_game_per_team": 17.960925039872407,
-      "max_kills_one_game": 10,
+      "ticket_loss_share_kill": 0.623310158106535,
+      "ticket_loss_share_capture": 0.37668984189346494,
+      "kills_per_game_per_team": 24.035885167464116,
+      "max_kills_one_game": 13,
       "max_deaths_one_game": 3,
-      "comeback_rate": 0.05869218500797448,
-      "last_man_rate": 0.0,
-      "team_a_winrate": 0.48740031897926633
+      "comeback_rate": 0.03891547049441786,
+      "outnumbered_rate": 0.0,
+      "ambush_per_turn": 0.19859738220734072,
+      "ambush_success": 0.6663910456791369,
+      "ambush_kill_rate": 0.37224967227992334,
+      "ambush_share_of_kills": 0.12247768819879898,
+      "team_a_winrate": 0.5033492822966508
+    },
+    "c_kill70": {
+      "seconds": 0.8318642599999748,
+      "n_games": 3135,
+      "end_reason": {
+        "ticket": 0.9987240829346092,
+        "wipe": 0.0,
+        "turn_limit": 0.0012759170653907496
+      },
+      "ended_before_limit": 0.9987240829346092,
+      "turns_mean": 89.3518341307815,
+      "turns_p10_p50_p90": [
+        66.0,
+        87.0,
+        116.0
+      ],
+      "ticket_loss_share_kill": 0.6899997482130151,
+      "ticket_loss_share_capture": 0.3100002517869849,
+      "kills_per_game_per_team": 26.811004784688997,
+      "max_kills_one_game": 15,
+      "max_deaths_one_game": 3,
+      "comeback_rate": 0.020095693779904306,
+      "outnumbered_rate": 0.0006379585326953748,
+      "ambush_per_turn": 0.20043695871025782,
+      "ambush_success": 0.6744915042923806,
+      "ambush_kill_rate": 0.3768745769956898,
+      "ambush_share_of_kills": 0.12587370988370364,
+      "team_a_winrate": 0.4982456140350877
+    },
+    "c_kill30": {
+      "seconds": 0.5048345740000286,
+      "n_games": 3135,
+      "end_reason": {
+        "ticket": 1.0,
+        "wipe": 0.0,
+        "turn_limit": 0.0
+      },
+      "ended_before_limit": 1.0,
+      "turns_mean": 39.548644338118024,
+      "turns_p10_p50_p90": [
+        26.0,
+        38.0,
+        55.0
+      ],
+      "ticket_loss_share_kill": 0.3516639286844701,
+      "ticket_loss_share_capture": 0.64833607131553,
+      "kills_per_game_per_team": 12.06140350877193,
+      "max_kills_one_game": 9,
+      "max_deaths_one_game": 3,
+      "comeback_rate": 0.09346092503987241,
+      "outnumbered_rate": 0.0,
+      "ambush_per_turn": 0.19959672541033188,
+      "ambush_success": 0.6709500141431285,
+      "ambush_kill_rate": 0.3778235745746959,
+      "ambush_share_of_kills": 0.12363636363636364,
+      "team_a_winrate": 0.5055821371610846
+    },
+    "no_ambush": {
+      "seconds": 0.8418985810000095,
+      "n_games": 3135,
+      "end_reason": {
+        "ticket": 1.0,
+        "wipe": 0.0,
+        "turn_limit": 0.0
+      },
+      "ended_before_limit": 1.0,
+      "turns_mean": 76.26730462519936,
+      "turns_p10_p50_p90": [
+        54.0,
+        74.0,
+        102.0
+      ],
+      "ticket_loss_share_kill": 0.6117440534943814,
+      "ticket_loss_share_capture": 0.38825594650561857,
+      "kills_per_game_per_team": 23.094098883572567,
+      "max_kills_one_game": 13,
+      "max_deaths_one_game": 3,
+      "comeback_rate": 0.03508771929824561,
+      "outnumbered_rate": 0.0006379585326953748,
+      "ambush_per_turn": 0.0,
+      "ambush_success": 0.0,
+      "ambush_kill_rate": 0.0,
+      "ambush_share_of_kills": 0.0,
+      "team_a_winrate": 0.49122807017543857
+    },
+    "one_life": {
+      "seconds": 0.43444122300002164,
+      "n_games": 3135,
+      "end_reason": {
+        "ticket": 0.5578947368421052,
+        "wipe": 0.4421052631578947,
+        "turn_limit": 0.0
+      },
+      "ended_before_limit": 1.0,
+      "turns_mean": 39.346730462519936,
+      "turns_p10_p50_p90": [
+        24.0,
+        40.0,
+        54.0
+      ],
+      "ticket_loss_share_kill": 0.3809269267921708,
+      "ticket_loss_share_capture": 0.6190730732078292,
+      "kills_per_game_per_team": 11.448325358851674,
+      "max_kills_one_game": 13,
+      "max_deaths_one_game": 1,
+      "comeback_rate": 0.1470494417862839,
+      "outnumbered_rate": 0.05773524720893142,
+      "ambush_per_turn": 0.19988326091186198,
+      "ambush_success": 0.6701817001946788,
+      "ambush_kill_rate": 0.36490103828682674,
+      "ambush_share_of_kills": 0.12533957453922348,
+      "team_a_winrate": 0.49792663476874005
     }
   }
 }
