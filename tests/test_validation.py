@@ -142,3 +142,16 @@ def test_intermittent_squads_and_bonus():
     big = _run(**kw, sim_overrides={"squad_frac": 0.3, "squad_bonus": 1.0})
     sq = big.squad >= 0
     assert big.winrate(-1)[sq].mean() > big.winrate(-1)[~sq].mean() + 0.03
+
+
+def test_headcount_ambush():
+    """인원 반영: 기습 확률은 p_ambush 이상, 상한 이하. coin + scale 0이면 p_ambush 그대로."""
+    v1 = _run(sim_overrides={"ambush_team": "coin", "ambush_gap_scale": 0.0}).games
+    v2 = _run().games
+    r1 = v1["ambush"].sum() / v1["turns"].sum()
+    r2 = v2["ambush"].sum() / v2["turns"].sum()
+    assert abs(r1 - 0.2) < 0.01
+    assert 0.2 < r2 <= 0.6
+    for mode in ("linear", "square"):
+        g = _run(sim_overrides={"ambush_team": mode}).games
+        assert (g["kills_a"] == g["deaths_b"]).all()

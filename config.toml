@@ -12,7 +12,10 @@ capture_coef = 1.459      # 점령 계수 c: 기본 설정(q=0.05, k=0.5, σ=1)�
 turn_limit = 150          # 턴 상한 K
 sigma = 1.0               # 교전 운 σ 기본값 (격자는 [grid].sigma)
 equip_strength = 1.0      # 장비 세기 m
-p_ambush = 0.2            # 매 턴 일반 교전 대신 기습이 일어날 확률
+p_ambush = 0.2            # 매 턴 일반 교전 대신 기습이 일어날 기본 확률
+ambush_gap_scale = 1.0    # 기습 확률 = p_ambush × (1 + scale × |A생존 − B생존| / 16) (0이면 인원 무관)
+ambush_cap = 0.6          # 기습 확률 상한
+ambush_team = "linear"    # 기습 팀: coin(동전, v1) / linear(생존 비율) / square(생존 제곱 비율)
 p_steal = 0.0             # 킬 기록이 같은 팀 다른 생존자에게 갈 확률 (기본 설정 변형에서만 0.3)
 comeback_deficit = 30     # 티켓 역전승 기준 (티켓 차)
 outnumbered_deficit = 5   # 인원 열세 역전승 기준 (생존 인원 차)
@@ -156,6 +159,33 @@ squad_corr = 0.0
 squad_p_play = 0.5
 squad_bonus = 0.5
 
+# 기습 팀 선정 방식 (기습 확률의 인원 차 증가는 셋 다 켜 둔다). linear는 기본과 같다.
+[variants.amb_coin]
+ambush_team = "coin"
+
+[variants.amb_square]
+ambush_team = "square"
+
+[variants.amb_coin_leave]
+ambush_team = "coin"
+p_leave = 0.2
+leave_mode = "skill"
+
+[variants.amb_square_leave]
+ambush_team = "square"
+p_leave = 0.2
+leave_mode = "skill"
+
+[variants.amb_coin_squad]
+ambush_team = "coin"
+squad_frac = 0.3
+squad_corr = 0.0
+
+[variants.amb_square_squad]
+ambush_team = "square"
+squad_frac = 0.3
+squad_corr = 0.0
+
 # 민감도 묶음 ("base" = 기본 설정 시드 0 실행)
 [sensitivity]
 steal = ["base", "steal15", "steal30", "steal50"]
@@ -165,6 +195,9 @@ squad = ["base", "squad30_r0", "squad30_r5", "squad60_r0", "squad60_r5"]
 squad_bonus = ["squad30_r0", "squad30_b25", "squad30_b50", "squad30_b100"]
 squad_part = ["squad30_r0", "squad30_p50_b0", "squad30_b50", "squad30_p50_b50"]
 combo = ["base", "combo", "combo_real"]
+ambush_team = ["amb_coin", "base", "amb_square"]
+ambush_team_leave = ["amb_coin_leave", "leave_skill20", "amb_square_leave"]
+ambush_team_squad = ["amb_coin_squad", "squad30_r0", "amb_square_squad"]
 
 # 보정 결과: k별 돌격·저격 점령 가중치 (k 적용 후의 최종값). 비어 있으면 위 표 + k 규칙 사용.
 [calibration]

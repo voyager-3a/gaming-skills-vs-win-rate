@@ -61,6 +61,12 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
     T, d, c = float(sim["tickets"]), float(sim["ticket_per_death"]), float(sim["capture_coef"])
     K, sigma = int(sim["turn_limit"]), float(sim["sigma"])
     p_ambush = float(sim["p_ambush"])
+    # 인원 반영 기습: 기습 확률 = p_ambush × (1 + gap_scale × |A생존 − B생존| / team_size), 상한 cap.
+    # 기습 팀은 coin(동전) / linear(생존 인원 비율) / square(생존 인원 제곱 비율).
+    # coin + gap_scale 0이면 인원 무관 버전(v1)과 같다.
+    amb_team = str(sim.get("ambush_team", "linear"))
+    gap_scale = float(sim.get("ambush_gap_scale", 1.0))
+    amb_cap = float(sim.get("ambush_cap", 0.6))
     p_steal = float(sim.get("p_steal", 0.0))
     team_of = np.arange(P) >= ts
 
@@ -104,8 +110,17 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
 
         # 3'. 기습: 확률 p_ambush로 일반 교전 대신. 기습하는 팀은 동전으로 정한다.
         #     기습조 2명 중 전투력이 높은 쪽이 대표로 싸우고, 킬·데스도 대표가 진다.
-        amb = (rng.random(B) < p_ambush) & act
-        amb_by_a = rng.random(B) < 0.5
+        na = alive[:, :ts].sum(axis=1).astype(float)
+        nb = alive[:, ts:].sum(axis=1).astype(float)
+        p_amb = p_ambush if gap_scale == 0 else np.minimum(
+            p_ambush * (1 + gap_scale * np.abs(na - nb) / ts), max(amb_cap, p_ambush))
+        if amb_team == "coin":
+            p_a = 0.5
+        else:
+            wa, wb = (na, nb) if amb_team == "linear" else (na ** 2, nb ** 2)
+            p_a = wa / np.maximum(wa + wb, 1)
+        amb = (rng.random(B) < p_amb) & act
+        amb_by_a = rng.random(B) < p_a
         u = rng.random((6, B))
         aw, tw = aw_all * alive, tw_all * alive
         a1A, a2A, has2A, tgA = _pick_ambush(aw[:, :ts], tw[:, :ts], u[:3], rows)

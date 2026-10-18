@@ -45,6 +45,7 @@ def _check(variant):
         out["capture"] = r["capture"]
         out["after_winrate"] = r["after"]["winrate"]
         out["after_within_tolerance"] = r["within_tolerance"]
+        (ROOT / "results" / "calibration").mkdir(parents=True, exist_ok=True)
         (ROOT / "results" / "calibration" / f"{r['key'].replace(':', '_')}.json").write_text(
             json.dumps(r, indent=2, ensure_ascii=False))
     out["seconds"] = time.perf_counter() - t0
@@ -103,6 +104,8 @@ def label(cfg, v):
         return "기본 (킬 스틸·이탈·분대 없음)"
     p = cfg["variants"][v]
     parts = []
+    if "ambush_team" in p:
+        parts.append({"coin": "기습 팀 동전", "square": "기습 팀 제곱 비례", "linear": "기습 팀 정비례"}[p["ambush_team"]])
     if "p_steal" in p:
         parts.append(f"킬 스틸 {p['p_steal']}")
     if "p_leave" in p:
@@ -110,7 +113,7 @@ def label(cfg, v):
     if "squad_frac" in p:
         parts.append(f"분대 {p['squad_frac']} (상관 {p.get('squad_corr', 0.0)}, p_play {p.get('squad_p_play', 1.0)}, "
                      f"b {p.get('squad_bonus', 0.0)})")
-    return " + ".join(parts)
+    return " + ".join(parts) or "기본"
 
 
 def summary_table(cfg, df):

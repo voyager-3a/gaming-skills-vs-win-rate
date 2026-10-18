@@ -135,6 +135,7 @@ def main():
             changed = {k: (old.get(k), v) for k, v in entries.items() if old.get(k) != v}
             write_config(entries)
             cdir = ROOT / "results" / "calibration"
+            cdir.mkdir(parents=True, exist_ok=True)
             for r in cal:
                 (cdir / f"{r['key'].replace(':', '_')}.json").write_text(
                     json.dumps(r, indent=2, ensure_ascii=False))

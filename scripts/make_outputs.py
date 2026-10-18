@@ -190,8 +190,11 @@ def main():
     timing = json.loads((OUT / "timing.json").read_text())
 
     # 변형 비교 (모두 시드 0, 기본 설정)
-    labels = {"base_seed0": "기본 (킬 62%)", "kill69": "c = 0.83 (킬 69%)", "kill35": "c = 12.504 (킬 35%)",
-              "no_ambush": "기습 없음", "one_life": "목숨 1", "steal30": "킬 스틸 0.3"}
+    share = lambda n: runs[n]["summary"]["ticket_loss_share_kill"]  # noqa: E731
+    labels = {"base_seed0": f"기본 (c = {cfg['sim']['capture_coef']}, 킬 {share('base_seed0'):.0%})",
+              "kill69": f"c = {cfg['variants']['kill69']['capture_coef']} (킬 {share('kill69'):.0%})",
+              "kill35": f"c = {cfg['variants']['kill35']['capture_coef']} (킬 {share('kill35'):.0%})",
+              "no_ambush": "기습 없음", "one_life": "목숨 1"}
     var = []
     for n, lab in labels.items():
         c = corr[n].set_index("games")
