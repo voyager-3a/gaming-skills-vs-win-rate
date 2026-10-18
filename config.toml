@@ -12,24 +12,46 @@ capture_coef = 1.459      # 점령 계수 c: 기본 설정(q=0.05, k=0.5, σ=1)�
 turn_limit = 150          # 턴 상한 K
 sigma = 1.0               # 교전 운 σ 기본값 (격자는 [grid].sigma)
 equip_strength = 1.0      # 장비 세기 m
-comeback_deficit = 30     # 티켓 역전승 기준
+p_ambush = 0.2            # 매 턴 일반 교전 대신 기습이 일어날 확률
+comeback_deficit = 30     # 티켓 역전승 기준 (티켓 차)
+outnumbered_deficit = 5   # 인원 열세 역전승 기준 (생존 인원 차)
 chunk_games = 4096        # 동시에 진행하는 판 수 (성능용)
 
 # 스타일 초기값 (k = 1 기준). 실제 값 = 올라운드 + k × (표 값 − 올라운드)
+# ambush_attack: 기습하는 쪽으로 뽑힐 가중치, ambush_target: 기습당하는 쪽으로 뽑힐 가중치
 [styles.assault]
 engage = 1.5
 p_die = 0.9
 capture = 1.0
+ambush_attack = 2.0
+ambush_target = 0.6
 
 [styles.allround]
 engage = 1.0
 p_die = 0.6
 capture = 0.5
+ambush_attack = 1.0
+ambush_target = 1.0
 
 [styles.sniper]
 engage = 0.6
 p_die = 0.3
 capture = 0.1
+ambush_attack = 0.3
+ambush_target = 2.0
+
+# 기본 설정(q, k, σ = 기본값)에서만 돌리는 민감도 변형. 변형마다 따로 보정한다.
+[variants.c_kill70]
+capture_coef = 0.83        # 킬 7 : 점령 3이 되는 c (scripts/tune_capture.py)
+
+[variants.c_kill30]
+capture_coef = 12.504        # 킬 3 : 점령 7이 되는 c
+
+[variants.no_ambush]
+p_ambush = 0.0
+
+[variants.one_life]
+lives = 1
 
 # 보정 결과: k별 돌격·저격 점령 가중치 (k 적용 후의 최종값). 비어 있으면 위 표 + k 규칙 사용.
 [calibration]
@@ -38,7 +60,10 @@ n_users = 2000
 max_games = 1000
 seed = 7
 [calibration.capture]
-# "0.5" = { assault = ..., sniper = ... }
+# "변형:k=값" = { assault = ..., sniper = ... }  (scripts/calibrate.py가 채운다)
+"base:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"base:k=1.0" = { assault = 0.6285, sniper = 0.4854 }
+"c_kill70:k=0.5" = { assault = 0.581, sniper = 0.4597 }
 
 [grid]
 q = [0.0, 0.05, 0.15]

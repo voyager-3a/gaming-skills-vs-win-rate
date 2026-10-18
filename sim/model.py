@@ -21,17 +21,25 @@ class StyleParams:
     engage: np.ndarray   # (3,) 교전 가중치
     p_die: np.ndarray    # (3,) 졌을 때 사망 확률
     capture: np.ndarray  # (3,) 점령 가중치
+    ambush_attack: np.ndarray  # (3,) 기습하는 쪽으로 뽑힐 가중치
+    ambush_target: np.ndarray  # (3,) 기습당하는 쪽으로 뽑힐 가중치
 
 
-def style_params(cfg: dict, k: float, capture_override: dict | None = None) -> StyleParams:
-    """올라운드와의 차이에 k를 곱한다. capture_override는 보정된 최종 점령 가중치."""
+def calibration_key(variant: str | None, k: float) -> str:
+    return f"{variant or 'base'}:k={float(k)}"
+
+
+def style_params(cfg: dict, k: float, capture_override: dict | None = None,
+                 variant: str | None = None) -> StyleParams:
+    """올라운드와의 차이에 k를 곱한다. capture_override는 보정된 최종 점령 가중치이고,
+    주지 않으면 설정 파일의 보정값(변형 실행 variant, k별)을 쓴다."""
     table = cfg["styles"]
     out = {}
-    for key in ("engage", "p_die", "capture"):
+    for key in ("engage", "p_die", "capture", "ambush_attack", "ambush_target"):
         base = np.array([table[s][key] for s in STYLES], dtype=float)
         out[key] = base[1] + k * (base - base[1])
     if capture_override is None:
-        capture_override = cfg.get("calibration", {}).get("capture", {}).get(str(k))
+        capture_override = cfg.get("calibration", {}).get("capture", {}).get(calibration_key(variant, k))
     if capture_override:
         out["capture"][0] = capture_override["assault"]
         out["capture"][2] = capture_override["sniper"]

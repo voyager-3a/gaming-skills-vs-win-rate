@@ -29,19 +29,22 @@ class RunResult:
 
 
 def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: float, k: float,
-        seed: int, sigma: float | None = None, capture_override: dict | None = None,
-        sim_overrides: dict | None = None, zero_power: bool = False, zero_style: bool = False) -> RunResult:
-    """zero_power: 판에서 s, e를 0으로 둔다 (s는 상관 계산용으로만 남김).
+        seed: int, sigma: float | None = None, variant: str | None = None,
+        capture_override: dict | None = None, sim_overrides: dict | None = None,
+        zero_power: bool = False, zero_style: bool = False) -> RunResult:
+    """variant: 설정 파일 [variants]의 기본 설정 전용 변형 (파라미터와 보정값을 함께 바꾼다).
+    zero_power: 판에서 s, e를 0으로 둔다 (s는 상관 계산용으로만 남김).
     zero_style: 전원을 올라운드로 둔다."""
     t0 = time.perf_counter()
-    sim = {**cfg["sim"], **(sim_overrides or {})}
+    variant_sim = cfg.get("variants", {}).get(variant, {}) if variant else {}
+    sim = {**cfg["sim"], **variant_sim, **(sim_overrides or {})}
     if sigma is not None:
         sim["sigma"] = sigma
     rng = np.random.default_rng(seed)
     users = make_users(n_users, q, sim["equip_strength"], rng)
     if zero_style:
         users.style[:] = 1
-    sp = style_params(cfg, k, capture_override)
+    sp = style_params(cfg, k, capture_override, variant)
     power_u = np.zeros(n_users) if zero_power else users.s + users.e
 
     ts = int(sim["team_size"])
@@ -73,6 +76,8 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
 
         rows = np.arange(len(su))
         kmax, dmax = res.kills.argmax(1), res.deaths.argmax(1)
+        win_kills = np.where(res.win, res.kills, -1)
+        carry = win_kills.argmax(1)  # 이긴 팀 최다 킬 (동률이면 앞 슬롯)
         records.append(pd.DataFrame({
             "game": start + rows,
             "round": (start + rows) // per_round,
@@ -92,12 +97,16 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
             "max_deaths": res.deaths[rows, dmax],
             "max_deaths_user": su[rows, dmax],
             "winner_max_deficit": res.winner_max_deficit,
-            "last_man_user": np.where(res.last_man_slot >= 0,
-                                      su[rows, np.maximum(res.last_man_slot, 0)], -1),
+            "winner_max_alive_deficit": res.winner_max_alive_deficit,
+            "carry_user": su[rows, carry],
+            "carry_kills": res.kills[rows, carry],
+            "ambush": res.ambush,
+            "ambush_win": res.ambush_win,
+            "ambush_kill": res.ambush_kill,
         }))
 
     games = pd.concat(records, ignore_index=True)
     games["comeback"] = games["winner_max_deficit"] >= sim["comeback_deficit"]
-    games["last_man"] = games["last_man_user"] >= 0
+    games["outnumbered"] = games["winner_max_alive_deficit"] >= sim["outnumbered_deficit"]
     return RunResult(users=users, checkpoints=cps, wins=snap[0], kills=snap[1], deaths=snap[2],
                      games=games, seconds=time.perf_counter() - t0)

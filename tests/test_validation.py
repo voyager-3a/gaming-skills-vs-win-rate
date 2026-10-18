@@ -69,3 +69,17 @@ def test_5_same_seed_same_result():
     for x, y in [(a.wins, b.wins), (a.kills, b.kills), (a.deaths, b.deaths), (a.users.s, b.users.s)]:
         assert np.array_equal(x, y)
     assert a.games.equals(b.games)
+
+
+def test_ambush_best_of_two():
+    """실력 0, k = 0, 전원 기습이면 기습 쪽 승률은 max(ε1, ε2) > ε3 = 2/3 (기습조 2명일 때)."""
+    g = _run(q=0.0, k=0.0, zero_power=True, sim_overrides={"p_ambush": 1.0}).games
+    assert g["ambush"].sum() == g["turns"].sum()
+    rate = g["ambush_win"].sum() / g["ambush"].sum()
+    assert abs(rate - 2 / 3) < 0.01
+    assert (g["kills_a"] == g["deaths_b"]).all() and (g["kills_b"] == g["deaths_a"]).all()
+
+
+def test_no_ambush_when_p_zero():
+    g = _run(sim_overrides={"p_ambush": 0.0}).games
+    assert g["ambush"].sum() == 0

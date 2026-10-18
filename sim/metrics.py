@@ -57,12 +57,14 @@ def style_table(res: RunResult, i: int = -1) -> pd.DataFrame:
     return t.reindex(list(STYLES)).drop(columns=["kills", "deaths"])
 
 
-def last_man_table(res: RunResult) -> pd.DataFrame:
-    """라스트 맨 승리 판마다 마지막 유저의 실력·스타일·장비."""
-    g = res.games[res.games["last_man"]]
-    u = g["last_man_user"].to_numpy()
+def outnumbered_table(res: RunResult) -> pd.DataFrame:
+    """인원 열세 역전승 판마다 캐리(이긴 팀 최다 킬 유저)의 실력·스타일·장비."""
+    g = res.games[res.games["outnumbered"]]
+    u = g["carry_user"].to_numpy()
     return pd.DataFrame({"game": g["game"].to_numpy(), "user": u, "s": res.users.s[u],
                          "style": np.array(STYLES)[res.users.style[u]], "e": res.users.e[u],
+                         "carry_kills": g["carry_kills"].to_numpy(),
+                         "max_alive_deficit": g["winner_max_alive_deficit"].to_numpy(),
                          "turns": g["turns"].to_numpy()})
 
 
@@ -82,6 +84,10 @@ def game_summary(res: RunResult, turn_limit: int) -> dict:
         "max_kills_one_game": int(g["max_kills"].max()),
         "max_deaths_one_game": int(g["max_deaths"].max()),
         "comeback_rate": float(g["comeback"].mean()),
-        "last_man_rate": float(g["last_man"].mean()),
+        "outnumbered_rate": float(g["outnumbered"].mean()),
+        "ambush_per_turn": float(g["ambush"].sum() / g["turns"].sum()),
+        "ambush_success": float(g["ambush_win"].sum() / max(g["ambush"].sum(), 1)),
+        "ambush_kill_rate": float(g["ambush_kill"].sum() / max(g["ambush"].sum(), 1)),
+        "ambush_share_of_kills": float(g["ambush_kill"].sum() / (g["kills_a"] + g["kills_b"]).sum()),
         "team_a_winrate": float((g["winner"] == 0).mean()),
     }

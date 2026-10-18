@@ -1,0 +1,23 @@
+{
+  "variant": "c_kill30",
+  "target_kill_share": 0.3,
+  "capture_used": {
+    "assault": 0.5601,
+    "sniper": 0.4754
+  },
+  "capture_coef": 12.504,
+  "steps": [
+    {
+      "c": 10.005,
+      "kill_share": 0.32581059944102053
+    },
+    {
+      "c": 15.002500000000001,
+      "kill_share": 0.27652643877506805
+    },
+    {
+      "c": 12.50375,
+      "kill_share": 0.2991144178478247
+    }
+  ]
+}
