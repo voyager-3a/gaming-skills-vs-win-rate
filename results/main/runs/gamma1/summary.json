@@ -1,0 +1,46 @@
+{
+  "name": "gamma1",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "gamma1",
+  "seed": 0,
+  "seconds": 21.82944514799999,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 62558,
+    "end_reason": {
+      "ticket": 1.0,
+      "wipe": 0.0,
+      "turn_limit": 0.0
+    },
+    "ended_before_limit": 1.0,
+    "turns_mean": 70.91710093033664,
+    "turns_p10_p50_p90": [
+      50.0,
+      68.0,
+      96.0
+    ],
+    "ticket_loss_share_kill": 0.5990886779742775,
+    "ticket_loss_share_capture": 0.40091132202572266,
+    "kills_per_game_per_team": 21.387504395920587,
+    "max_kills_one_game": 15,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.029492630838581797,
+    "outnumbered_rate": 0.00014386649189552096,
+    "ambush_per_turn": 0.2110161949963394,
+    "ambush_success": 0.667037330197114,
+    "ambush_kill_rate": 0.37265464520450053,
+    "ambush_share_of_kills": 0.13037165923183774,
+    "team_a_winrate": 0.5034527958054925,
+    "leaves_per_game": 0.0
+  },
+  "outnumbered_carry": {
+    "n": 9,
+    "s_mean": 0.8898233715810948,
+    "style_counts": {
+      "assault": 6,
+      "allround": 3
+    }
+  }
+}

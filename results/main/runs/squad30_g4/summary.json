@@ -1,0 +1,46 @@
+{
+  "name": "squad30_g4",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "squad30_g4",
+  "seed": 0,
+  "seconds": 22.713322957999992,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 62744,
+    "end_reason": {
+      "ticket": 1.0,
+      "wipe": 0.0,
+      "turn_limit": 0.0
+    },
+    "ended_before_limit": 1.0,
+    "turns_mean": 59.50065344893536,
+    "turns_p10_p50_p90": [
+      42.0,
+      55.0,
+      85.0
+    ],
+    "ticket_loss_share_kill": 0.5656916623222175,
+    "ticket_loss_share_capture": 0.43430833767778254,
+    "kills_per_game_per_team": 17.983321114369502,
+    "max_kills_one_game": 13,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.018455947979089633,
+    "outnumbered_rate": 0.00012750223128904755,
+    "ambush_per_turn": 0.21279352981497113,
+    "ambush_success": 0.6318024128173368,
+    "ambush_kill_rate": 0.35329370713875713,
+    "ambush_share_of_kills": 0.12437015080930441,
+    "team_a_winrate": 0.49966530664286624,
+    "leaves_per_game": 0.0
+  },
+  "outnumbered_carry": {
+    "n": 8,
+    "s_mean": 0.5461579877256061,
+    "style_counts": {
+      "assault": 6,
+      "sniper": 2
+    }
+  }
+}

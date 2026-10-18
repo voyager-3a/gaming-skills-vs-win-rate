@@ -256,6 +256,10 @@ seed = 7
 "base:k=1.0" = { assault = 0.6228, sniper = 0.4883 }
 "combo:k=0.5" = { assault = 0.5655, sniper = 0.4614 }
 "combo_real:k=0.5" = { assault = 0.5848, sniper = 0.4507 }
+"combo_real_g2:k=0.5" = { assault = 0.5848, sniper = 0.4507 }
+"gamma1:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"gamma2:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"gamma4:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
 "kill35:k=0.5" = { assault = 0.5181, sniper = 0.4968 }
 "kill69:k=0.5" = { assault = 0.5785, sniper = 0.4515 }
 "leave_flat10:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
@@ -269,6 +273,9 @@ seed = 7
 "squad30_b100:k=0.5" = { assault = 0.5846, sniper = 0.4615 }
 "squad30_b25:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
 "squad30_b50:k=0.5" = { assault = 0.5726, sniper = 0.468 }
+"squad30_g1:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"squad30_g2:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"squad30_g4:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
 "squad30_p50_b0:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
 "squad30_p50_b50:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
 "squad30_r0:k=0.5" = { assault = 0.5573, sniper = 0.4767 }

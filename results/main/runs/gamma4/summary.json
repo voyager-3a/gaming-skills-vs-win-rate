@@ -1,0 +1,46 @@
+{
+  "name": "gamma4",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "gamma4",
+  "seed": 0,
+  "seconds": 20.892343075000042,
+  "crossover": 908.9842729757147,
+  "summary": {
+    "n_games": 62558,
+    "end_reason": {
+      "ticket": 1.0,
+      "wipe": 0.0,
+      "turn_limit": 0.0
+    },
+    "ended_before_limit": 0.9999840148342338,
+    "turns_mean": 59.391316857955815,
+    "turns_p10_p50_p90": [
+      42.0,
+      55.0,
+      85.0
+    ],
+    "ticket_loss_share_kill": 0.5651331346603801,
+    "ticket_loss_share_capture": 0.4348668653396199,
+    "kills_per_game_per_team": 17.955856964736725,
+    "max_kills_one_game": 12,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.018702643946417723,
+    "outnumbered_rate": 9.591099459701397e-05,
+    "ambush_per_turn": 0.21246260835301267,
+    "ambush_success": 0.6323170978889868,
+    "ambush_kill_rate": 0.3536960465375533,
+    "ambush_share_of_kills": 0.12427951116482273,
+    "team_a_winrate": 0.4993765785351194,
+    "leaves_per_game": 0.0
+  },
+  "outnumbered_carry": {
+    "n": 6,
+    "s_mean": 0.8171697963565783,
+    "style_counts": {
+      "assault": 4,
+      "sniper": 2
+    }
+  }
+}
