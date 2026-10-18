@@ -1,0 +1,61 @@
+# 16대16 승률 vs K/D 시뮬레이션 — 모든 파라미터는 이 파일 하나에 둔다 (DESIGN.md 참고).
+
+[sim]
+n_users = 2000            # 시간 초과 시 1000
+max_games = 1000          # 유저당 최대 판수 (줄이지 않음)
+checkpoints = [10, 30, 100, 300, 1000]
+team_size = 16
+lives = 3                 # 목숨 L
+tickets = 100             # 티켓 T
+ticket_per_death = 2      # 데스당 티켓 감소 d
+capture_coef = 0.5        # 점령 계수 c (파일럿 후 조정)
+turn_limit = 150          # 턴 상한 K
+sigma = 1.0               # 교전 운 σ
+equip_strength = 1.0      # 장비 세기 m
+comeback_deficit = 30     # 티켓 역전승 기준
+chunk_games = 4096        # 동시에 진행하는 판 수 (성능용)
+
+# 스타일 초기값 (k = 1 기준). 실제 값 = 올라운드 + k × (표 값 − 올라운드)
+[styles.assault]
+engage = 1.5
+p_die = 0.9
+capture = 1.0
+
+[styles.allround]
+engage = 1.0
+p_die = 0.6
+capture = 0.5
+
+[styles.sniper]
+engage = 0.6
+p_die = 0.3
+capture = 0.1
+
+# 보정 결과: k별 돌격·저격 점령 가중치 (k 적용 후의 최종값). 비어 있으면 위 표 + k 규칙 사용.
+[calibration]
+tolerance = 0.005         # 스타일별 승률 50% ± 0.5%p
+n_users = 2000
+max_games = 1000
+seed = 7
+[calibration.capture]
+# "0.5" = { assault = ..., sniper = ... }
+
+[grid]
+q = [0.0, 0.05, 0.15]
+k = [0.0, 0.5, 1.0]
+base_q = 0.05
+base_k = 0.5
+base_seeds = [0, 1, 2]
+other_seed = 42
+
+[pilot]
+n_users = 500
+max_games = 200
+checkpoints = [10, 30, 100, 200]
+q = 0.05
+k = 0.5
+seed = 0
+
+[analysis]
+bootstrap = 1000
+outliers_top = 20

@@ -1,0 +1,48 @@
+{
+  "seconds": 0.3117329410000025,
+  "params": {
+    "n_users": 500,
+    "max_games": 200,
+    "checkpoints": [
+      10,
+      30,
+      100,
+      200
+    ],
+    "q": 0.05,
+    "k": 0.5,
+    "seed": 0
+  },
+  "sim": {
+    "capture_coef": 0.5,
+    "turn_limit": 150,
+    "tickets": 100,
+    "ticket_per_death": 2,
+    "lives": 3
+  },
+  "n_games": 3135,
+  "end_reason": {
+    "ticket": 0.9955342902711324,
+    "wipe": 0.0,
+    "turn_limit": 0.004465709728867623
+  },
+  "ended_before_limit": 0.9942583732057416,
+  "turns_mean": 91.0548644338118,
+  "turns_p10_p50_p90": [
+    62.0,
+    90.0,
+    121.0
+  ],
+  "ticket_loss_share_kill": 0.6970762199534101,
+  "ticket_loss_share_capture": 0.30292378004659,
+  "kills_per_game_per_team": 27.387240829346094,
+  "max_kills_one_game": 14,
+  "max_deaths_one_game": 3,
+  "comeback_rate": 0.019138755980861243,
+  "team_a_winrate": 0.4988835725677831,
+  "time_estimate": {
+    "pilot_seconds_per_1M_user_games": 3.117329410000025,
+    "full_run_seconds_measured": 6.200117799999987,
+    "main_11_runs_seconds": 68.20129579999985
+  }
+}
