@@ -8,9 +8,9 @@ team_size = 16
 lives = 3                 # 목숨 L
 tickets = 100             # 티켓 T
 ticket_per_death = 2      # 데스당 티켓 감소 d
-capture_coef = 0.5        # 점령 계수 c (파일럿 후 조정)
+capture_coef = 1.459      # 점령 계수 c: 기본 설정(q=0.05, k=0.5, σ=1)에서 킬:점령 = 50:50 (scripts/tune_capture.py)
 turn_limit = 150          # 턴 상한 K
-sigma = 1.0               # 교전 운 σ
+sigma = 1.0               # 교전 운 σ 기본값 (격자는 [grid].sigma)
 equip_strength = 1.0      # 장비 세기 m
 comeback_deficit = 30     # 티켓 역전승 기준
 chunk_games = 4096        # 동시에 진행하는 판 수 (성능용)
@@ -43,8 +43,10 @@ seed = 7
 [grid]
 q = [0.0, 0.05, 0.15]
 k = [0.0, 0.5, 1.0]
+sigma = [1.0, 2.0, 3.0]  # 교전 운 σ 격자 축
 base_q = 0.05
 base_k = 0.5
+base_sigma = 1.0
 base_seeds = [0, 1, 2]
 other_seed = 42
 
@@ -54,6 +56,7 @@ max_games = 200
 checkpoints = [10, 30, 100, 200]
 q = 0.05
 k = 0.5
+sigma = [1.0, 2.0, 3.0]
 seed = 0
 
 [analysis]

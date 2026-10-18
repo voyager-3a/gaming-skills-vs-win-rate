@@ -29,12 +29,14 @@ class RunResult:
 
 
 def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: float, k: float,
-        seed: int, capture_override: dict | None = None, sim_overrides: dict | None = None,
-        zero_power: bool = False, zero_style: bool = False) -> RunResult:
+        seed: int, sigma: float | None = None, capture_override: dict | None = None,
+        sim_overrides: dict | None = None, zero_power: bool = False, zero_style: bool = False) -> RunResult:
     """zero_power: 판에서 s, e를 0으로 둔다 (s는 상관 계산용으로만 남김).
     zero_style: 전원을 올라운드로 둔다."""
     t0 = time.perf_counter()
     sim = {**cfg["sim"], **(sim_overrides or {})}
+    if sigma is not None:
+        sim["sigma"] = sigma
     rng = np.random.default_rng(seed)
     users = make_users(n_users, q, sim["equip_strength"], rng)
     if zero_style:
@@ -90,9 +92,12 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
             "max_deaths": res.deaths[rows, dmax],
             "max_deaths_user": su[rows, dmax],
             "winner_max_deficit": res.winner_max_deficit,
+            "last_man_user": np.where(res.last_man_slot >= 0,
+                                      su[rows, np.maximum(res.last_man_slot, 0)], -1),
         }))
 
     games = pd.concat(records, ignore_index=True)
     games["comeback"] = games["winner_max_deficit"] >= sim["comeback_deficit"]
+    games["last_man"] = games["last_man_user"] >= 0
     return RunResult(users=users, checkpoints=cps, wins=snap[0], kills=snap[1], deaths=snap[2],
                      games=games, seconds=time.perf_counter() - t0)

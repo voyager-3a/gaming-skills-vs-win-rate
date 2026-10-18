@@ -57,6 +57,15 @@ def style_table(res: RunResult, i: int = -1) -> pd.DataFrame:
     return t.reindex(list(STYLES)).drop(columns=["kills", "deaths"])
 
 
+def last_man_table(res: RunResult) -> pd.DataFrame:
+    """라스트 맨 승리 판마다 마지막 유저의 실력·스타일·장비."""
+    g = res.games[res.games["last_man"]]
+    u = g["last_man_user"].to_numpy()
+    return pd.DataFrame({"game": g["game"].to_numpy(), "user": u, "s": res.users.s[u],
+                         "style": np.array(STYLES)[res.users.style[u]], "e": res.users.e[u],
+                         "turns": g["turns"].to_numpy()})
+
+
 def game_summary(res: RunResult, turn_limit: int) -> dict:
     g = res.games
     reasons = g["reason"].value_counts(normalize=True).reindex(range(3), fill_value=0)
@@ -73,5 +82,6 @@ def game_summary(res: RunResult, turn_limit: int) -> dict:
         "max_kills_one_game": int(g["max_kills"].max()),
         "max_deaths_one_game": int(g["max_deaths"].max()),
         "comeback_rate": float(g["comeback"].mean()),
+        "last_man_rate": float(g["last_man"].mean()),
         "team_a_winrate": float((g["winner"] == 0).mean()),
     }

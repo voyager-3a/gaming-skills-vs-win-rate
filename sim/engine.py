@@ -24,6 +24,7 @@ class GameResults:
     loss_kill: np.ndarray    # (B,) 데스로 깎인 티켓 합 (양 팀)
     loss_cap: np.ndarray     # (B,) 점령으로 깎인 티켓 합 (양 팀)
     winner_max_deficit: np.ndarray  # (B,) 이긴 팀이 한때 뒤졌던 최대 티켓 차
+    last_man_slot: np.ndarray       # (B,) 라스트 맨 승리면 그 유저의 슬롯, 아니면 -1
 
 
 def _pick(weights: np.ndarray, u: np.ndarray) -> np.ndarray:
@@ -126,6 +127,11 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
 
     team = (np.arange(P) >= ts).astype(np.int8)
     win = team[None, :] == winner[:, None]
+
+    # 라스트 맨 승리: 살아 있는 인원은 줄기만 하므로 "한때 1명이었고 이김" = "이긴 팀이 1명 남은 채 끝남"
+    alive_win = (lives > 0) & win
+    last_man = alive_win.sum(axis=1) == 1
+    last_man_slot = np.where(last_man, alive_win.argmax(axis=1), -1)
     return GameResults(kills=kills, deaths=deaths, win=win, winner=winner, turns=turns,
                        reason=reason, tickets=tickets, loss_kill=loss_kill, loss_cap=loss_cap,
-                       winner_max_deficit=max_def[rows, winner])
+                       winner_max_deficit=max_def[rows, winner], last_man_slot=last_man_slot)
