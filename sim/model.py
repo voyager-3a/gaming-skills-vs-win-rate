@@ -93,12 +93,14 @@ def correlate_squad_skill(s: np.ndarray, squad: np.ndarray, rho: float, rng: np.
 
 
 def make_schedule_squads(n: int, max_games: int, team_size: int, squad: np.ndarray,
-                         rng: np.random.Generator) -> np.ndarray:
-    """make_schedule과 같되, 분대는 쪼개지 않고 항상 같은 팀에 넣는다.
+                         rng: np.random.Generator, p_play: float = 1.0,
+                         play_rng: np.random.Generator | None = None) -> tuple[np.ndarray, np.ndarray]:
+    """make_schedule과 같되, 분대로 참여한 분대는 쪼개지 않고 같은 팀에 넣는다.
 
-    라운드마다 단위(분대 또는 솔로)를 판수가 적은 순(동률 무작위)으로 훑으며, 분대는 빈자리가
-    충분한 무작위 팀에 바로 넣고(자리가 없으면 이번 라운드를 쉼), 솔로는 남은 자리를 같은 순서로 채운다.
-    팀 순서를 섞어 판(A팀, B팀)을 만든다.
+    라운드마다 분대는 확률 p_play로 분대로 참여하고(play_rng로 뽑음), 아니면 분대원이 각자 솔로가 된다.
+    단위(분대 또는 솔로)를 판수가 적은 순(동률 무작위)으로 훑으며, 분대는 빈자리가 충분한 무작위 팀에
+    바로 넣고(자리가 없으면 이번 라운드를 쉼), 솔로는 남은 자리를 같은 순서로 채운다.
+    반환: (판, 32) 유저 배치, (판, 32) 분대로 참여 중인지 여부.
     """
     per_game = 2 * team_size
     n_games = n // per_game
@@ -106,17 +108,26 @@ def make_schedule_squads(n: int, max_games: int, team_size: int, squad: np.ndarr
     n_squads = squad.max() + 1
     members = [np.flatnonzero(squad == i) for i in range(n_squads)]
     solo = np.flatnonzero(squad < 0)
-    lead = np.concatenate([[m[0] for m in members], solo]).astype(np.int64)  # 단위의 대표 유저
-    is_squad = np.arange(len(lead)) < n_squads
     games = np.zeros(n, dtype=np.int64)
-    rounds = []
+    rounds, flags = [], []
+    in_squad = np.zeros(n, dtype=bool)
     while games.min() < max_games:
+        active = (play_rng.random(n_squads) < p_play) if p_play < 1 else np.ones(n_squads, dtype=bool)
+        act_ids = np.flatnonzero(active)
+        idle = [members[i] for i in np.flatnonzero(~active)]
+        # 단위의 대표 유저: [분대로 참여하는 분대, 솔로, 이번 라운드 혼자 들어온 분대원]
+        lead = np.concatenate([[members[i][0] for i in act_ids], solo, *idle]).astype(np.int64)
+        unit_members = [members[i] for i in act_ids]
+        is_squad = np.arange(len(lead)) < len(act_ids)
+        in_squad[:] = False
+        for i in act_ids:
+            in_squad[members[i]] = True
         order = np.argsort(games[lead] + rng.random(len(lead)), kind="stable")
         teams = [[] for _ in range(2 * n_games)]
         room = np.full(2 * n_games, team_size)
         n_solo_slots = per_round
         for i in order[is_squad[order]]:
-            m = members[i]
+            m = unit_members[i]
             ok = np.flatnonzero(room >= len(m))
             # 남는 자리를 솔로가 채울 수 있을 때만 분대를 넣는다
             if len(ok) == 0 or n_solo_slots - len(m) < 0:
@@ -136,7 +147,8 @@ def make_schedule_squads(n: int, max_games: int, team_size: int, squad: np.ndarr
         rnd = tarr.reshape(n_games, per_game)
         games[rnd.ravel()] += 1
         rounds.append(rnd)
-    return np.concatenate(rounds)
+        flags.append(in_squad[rnd])
+    return np.concatenate(rounds), np.concatenate(flags)
 
 
 def make_schedule(n: int, max_games: int, team_size: int, rng: np.random.Generator) -> np.ndarray:

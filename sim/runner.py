@@ -25,6 +25,7 @@ class RunResult:
     seconds: float
     squad: np.ndarray | None = None  # 유저별 분대 번호 (-1 = 솔로)
     schedule: np.ndarray | None = None  # (판, 32) 유저 배치
+    in_squad: np.ndarray | None = None  # (판, 32) 분대로 참여 중인지
 
     def winrate(self, i: int) -> np.ndarray:
         return self.wins[i] / self.checkpoints[i]
@@ -73,10 +74,15 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
                    else 2 * p_leave_base * norm.cdf(-s_eff))
         leave_rng = np.random.default_rng([seed, 2])
 
+    # 간헐적 분대(p_play)와 협동 보너스(b): 분대로 참여한 판의 교전에서 전투력 +b
+    p_play = float(sim.get("squad_p_play", 1.0))
+    bonus = float(sim.get("squad_bonus", 0.0))
     if squad_frac > 0:
-        sched = make_schedule_squads(n_users, max_games, ts, squad, rng)
+        sched, in_squad = make_schedule_squads(n_users, max_games, ts, squad, rng, p_play,
+                                               np.random.default_rng([seed, 4]))
     else:
         sched = make_schedule(n_users, max_games, ts, rng)
+        in_squad = np.zeros(sched.shape, dtype=bool)
     per_round = n_users // (2 * ts)
     chunk = max(1, int(sim["chunk_games"]) // per_round) * per_round
 
@@ -89,7 +95,8 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
 
     for start in range(0, len(sched), chunk):
         su = sched[start:start + chunk]
-        res = play_games(power_u[su], users.style[su], sp, sim, rng, steal_rng,
+        power_slot = power_u[su] + bonus * in_squad[start:start + chunk] if bonus else power_u[su]
+        res = play_games(power_slot, users.style[su], sp, sim, rng, steal_rng,
                          None if leave_u is None else leave_u[su], leave_rng)
         for r0 in range(0, len(su), per_round):
             ru = su[r0:r0 + per_round].ravel()
@@ -139,4 +146,5 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
     games["comeback"] = games["winner_max_deficit"] >= sim["comeback_deficit"]
     games["outnumbered"] = games["winner_max_alive_deficit"] >= sim["outnumbered_deficit"]
     return RunResult(users=users, checkpoints=cps, wins=snap[0], kills=snap[1], deaths=snap[2],
-                     games=games, seconds=time.perf_counter() - t0, squad=squad, schedule=sched)
+                     games=games, seconds=time.perf_counter() - t0, squad=squad, schedule=sched,
+                     in_squad=in_squad)

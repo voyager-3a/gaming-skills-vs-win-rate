@@ -54,6 +54,8 @@ def _check(variant):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--skip-existing", action="store_true",
+                    help="이미 점검·실행한 변형은 기존 결과를 쓴다 (코드가 같으면 결과도 같다)")
     a = ap.parse_args()
     cfg = load_config()
     g = cfg["grid"]
@@ -63,18 +65,24 @@ def main():
     timing = {"workers": a.workers}
     t_all = time.perf_counter()
 
+    prev = {}
+    if a.skip_existing and (OUT / "calibration_check.json").exists():
+        prev = {v: c for v, c in json.loads((OUT / "calibration_check.json").read_text()).items()
+                if v in variants and (RUNS / v / "summary.json").exists()}
+    todo = [v for v in variants if v not in prev]
+    timing["skipped"] = sorted(prev)
     with Pool(a.workers) as pool:
         t0 = time.perf_counter()
-        checks = {c["variant"]: c for c in pool.map(_check, variants)}
+        checks = {**prev, **{c["variant"]: c for c in pool.map(_check, todo)}}
         write_config({calibration_key(v, g["base_k"]): c["capture"] for v, c in checks.items()})
         timing["check_seconds"] = time.perf_counter() - t0
-        for v, c in checks.items():
+        for v, c in sorted(checks.items()):
             print(f"  check {v}: {c['check_winrate']} recal={c['recalibrated']}", flush=True)
         (OUT / "calibration_check.json").write_text(json.dumps(checks, indent=2, ensure_ascii=False))
 
         t0 = time.perf_counter()
         jobs = [dict(name=v, q=g["base_q"], k=g["base_k"], sigma=g["base_sigma"], variant=v,
-                     seed=g["base_seeds"][0]) for v in variants]
+                     seed=g["base_seeds"][0]) for v in todo]
         infos = {}
         for info in pool.imap_unordered(_run_job, jobs):
             infos[info["name"]] = info
@@ -84,6 +92,60 @@ def main():
     timing["runs"] = {n: i["seconds"] for n, i in sorted(infos.items())}
     (OUT / "timing.json").write_text(json.dumps(timing, indent=2))
     report(cfg, checks)
+
+
+LABELS = {"p_steal": "킬 스틸", "p_leave": "이탈", "leave_mode": "", "squad_frac": "분대",
+          "squad_corr": "상관", "squad_p_play": "p_play", "squad_bonus": "b"}
+
+
+def label(cfg, v):
+    if v == "base":
+        return "기본 (킬 스틸·이탈·분대 없음)"
+    p = cfg["variants"][v]
+    parts = []
+    if "p_steal" in p:
+        parts.append(f"킬 스틸 {p['p_steal']}")
+    if "p_leave" in p:
+        parts.append(f"이탈 {'실력 연동' if p.get('leave_mode') == 'skill' else '실력 무관'} {p['p_leave']}")
+    if "squad_frac" in p:
+        parts.append(f"분대 {p['squad_frac']} (상관 {p.get('squad_corr', 0.0)}, p_play {p.get('squad_p_play', 1.0)}, "
+                     f"b {p.get('squad_bonus', 0.0)})")
+    return " + ".join(parts)
+
+
+def summary_table(cfg, df):
+    """민감도 전체를 한 표로, 그리고 묶음 안에서 앞서는 지표가 바뀌는 경계."""
+    d = df.drop_duplicates("variant")
+    fmt = lambda x: "> 1000" if np.isinf(x) else f"{x:.0f}"  # noqa: E731
+    out = ["## 전체 요약 (1000판)", "",
+           "| 설정 | 승률 상관 | K/D 상관 | 차이 (승률 − K/D) [95%] | 역전 지점 | 재보정 |", "|---|---|---|---|---|---|"]
+    for _, r in d.iterrows():
+        rec = {True: "예", False: "아니오"}.get(r["recalibrated"], "-")
+        out.append(f"| {label(cfg, r['variant'])} | {r['rho_winrate_1000']:.3f} | {r['rho_kd_1000']:.3f} | "
+                   f"{r['diff_1000']:+.3f} [{r['diff_1000_lo']:+.3f}, {r['diff_1000_hi']:+.3f}] | "
+                   f"{fmt(r['crossover'])} | {rec} |")
+    out += ["", "## 앞서는 지표가 바뀌는 경계 (1000판 차이의 부호가 묶음 안 이웃 설정 사이에서 바뀌는 곳)", ""]
+    found = False
+    for group, gd in df.groupby("group", sort=False):
+        gd = gd.reset_index(drop=True)
+        for i in range(1, len(gd)):
+            a, b = gd.iloc[i - 1], gd.iloc[i]
+            if np.sign(a["diff_1000"]) != np.sign(b["diff_1000"]):
+                found = True
+                line = f"- **{group}**: {label(cfg, a['variant'])} ({a['diff_1000']:+.3f}) → {label(cfg, b['variant'])} ({b['diff_1000']:+.3f})"
+                va, vb = cfg["variants"].get(a["variant"], {}), cfg["variants"].get(b["variant"], {})
+                keys = [k for k in set(va) | set(vb) if va.get(k, 0) != vb.get(k, 0)
+                        and isinstance(vb.get(k, 0), (int, float))]
+                if len(keys) == 1:
+                    k = keys[0]
+                    x0, x1 = float(va.get(k, 0)), float(vb.get(k, 0))
+                    x = x0 + (0 - a["diff_1000"]) * (x1 - x0) / (b["diff_1000"] - a["diff_1000"])
+                    line += f". 선형 보간으로 {k} ≈ {x:.2f}에서 비김"
+                out.append(line)
+    if not found:
+        out.append("- 없음")
+    out.append("")
+    return out
 
 
 def report(cfg, checks=None):
@@ -145,6 +207,7 @@ def report(cfg, checks=None):
                          f"{w['assault']:.4f} / {w['allround']:.4f} / {w['sniper']:.4f} | "
                          f"{'예' if c['after_within_tolerance'] else '아니오'} |")
         lines.append("")
+    lines += summary_table(cfg, df)
     (OUT / "REPORT.md").write_text("\n".join(lines))
     print("\n".join(lines))
 

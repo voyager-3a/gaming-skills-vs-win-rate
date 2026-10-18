@@ -122,3 +122,23 @@ def test_leave_mechanics():
     g = allout.games
     assert (g["leaves"] == g["deaths_a"] + g["deaths_b"]).all()
     assert allout.deaths[-1].max() <= 50
+
+
+def test_intermittent_squads_and_bonus():
+    kw = dict(n_users=640, max_games=60, checkpoints=[60])
+    base = _run(**kw, sim_overrides={"squad_frac": 0.3})
+    same = _run(**kw, sim_overrides={"squad_frac": 0.3, "squad_p_play": 1.0, "squad_bonus": 0.0})
+    assert np.array_equal(base.wins, same.wins) and np.array_equal(base.kills, same.kills)
+    assert np.array_equal(base.in_squad, base.squad[base.schedule] >= 0)  # 항상 분대로 참여
+    half = _run(**kw, sim_overrides={"squad_frac": 0.3, "squad_p_play": 0.5})
+    member = half.squad[half.schedule] >= 0
+    assert abs(half.in_squad[member].mean() - 0.5) < 0.05
+    team = np.where(np.arange(32) < 16, 0, 1)
+    for g, f in zip(half.schedule[:300], half.in_squad[:300]):
+        ids = half.squad[g]
+        for s in set(ids[f]):
+            assert len(set(team[(ids == s) & f])) == 1
+    # 보너스가 크면 분대원 승률이 오른다
+    big = _run(**kw, sim_overrides={"squad_frac": 0.3, "squad_bonus": 1.0})
+    sq = big.squad >= 0
+    assert big.winrate(-1)[sq].mean() > big.winrate(-1)[~sq].mean() + 0.03
