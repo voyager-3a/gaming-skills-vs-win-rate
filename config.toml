@@ -207,32 +207,38 @@ max_games = 1000
 seed = 7
 [calibration.capture]
 # "변형:k=값" = { assault = ..., sniper = ... }  (scripts/calibrate.py가 채운다)
+"amb_coin:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"amb_coin_leave:k=0.5" = { assault = 0.5755, sniper = 0.457 }
+"amb_coin_squad:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"amb_square:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"amb_square_leave:k=0.5" = { assault = 0.5887, sniper = 0.4467 }
+"amb_square_squad:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
 "base:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
 "base:k=1.0" = { assault = 0.6228, sniper = 0.4883 }
-"combo:k=0.5" = { assault = 0.5758, sniper = 0.4587 }
-"combo_real:k=0.5" = { assault = 0.5784, sniper = 0.455 }
+"combo:k=0.5" = { assault = 0.5655, sniper = 0.4614 }
+"combo_real:k=0.5" = { assault = 0.5848, sniper = 0.4507 }
 "kill35:k=0.5" = { assault = 0.5181, sniper = 0.4968 }
 "kill69:k=0.5" = { assault = 0.5785, sniper = 0.4515 }
-"leave_flat10:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"leave_flat20:k=0.5" = { assault = 0.5655, sniper = 0.4532 }
-"leave_flat30:k=0.5" = { assault = 0.6105, sniper = 0.4483 }
-"leave_skill10:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"leave_skill20:k=0.5" = { assault = 0.5655, sniper = 0.4532 }
-"leave_skill30:k=0.5" = { assault = 0.6105, sniper = 0.4483 }
+"leave_flat10:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"leave_flat20:k=0.5" = { assault = 0.5744, sniper = 0.444 }
+"leave_flat30:k=0.5" = { assault = 0.5926, sniper = 0.4377 }
+"leave_skill10:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"leave_skill20:k=0.5" = { assault = 0.5744, sniper = 0.444 }
+"leave_skill30:k=0.5" = { assault = 0.5926, sniper = 0.4377 }
 "no_ambush:k=0.5" = { assault = 0.5604, sniper = 0.4786 }
 "one_life:k=0.5" = { assault = 0.75, sniper = 0.3 }
-"squad30_b100:k=0.5" = { assault = 0.5922, sniper = 0.4549 }
-"squad30_b25:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"squad30_b50:k=0.5" = { assault = 0.5691, sniper = 0.4583 }
-"squad30_p50_b0:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"squad30_p50_b50:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"squad30_r0:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"squad30_r5:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"squad60_r0:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"squad60_r5:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"steal15:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"steal30:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
-"steal50:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
+"squad30_b100:k=0.5" = { assault = 0.5846, sniper = 0.4615 }
+"squad30_b25:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"squad30_b50:k=0.5" = { assault = 0.5726, sniper = 0.468 }
+"squad30_p50_b0:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"squad30_p50_b50:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"squad30_r0:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"squad30_r5:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"squad60_r0:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"squad60_r5:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"steal15:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"steal30:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
+"steal50:k=0.5" = { assault = 0.5573, sniper = 0.4767 }
 
 [grid]
 q = [0.0, 0.05, 0.15]

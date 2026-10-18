@@ -1,0 +1,452 @@
+{
+  "amb_coin": {
+    "variant": "amb_coin",
+    "check_winrate": {
+      "assault": 0.49933190271816885,
+      "allround": 0.49951851851851853,
+      "sniper": 0.5012667731629393
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 17.076613054000518
+  },
+  "amb_coin_leave": {
+    "variant": "amb_coin_leave",
+    "check_winrate": {
+      "assault": 0.4951316165951359,
+      "allround": 0.49958222222222226,
+      "sniper": 0.5059009584664537
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5755,
+      "sniper": 0.457
+    },
+    "after_winrate": {
+      "assault": 0.5003,
+      "allround": 0.4997,
+      "sniper": 0.5
+    },
+    "after_within_tolerance": true,
+    "seconds": 107.5029264499999
+  },
+  "amb_coin_squad": {
+    "variant": "amb_coin_squad",
+    "check_winrate": {
+      "assault": 0.499101573676681,
+      "allround": 0.5000533333333333,
+      "sniper": 0.5006693290734824
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 18.59259179199944
+  },
+  "amb_square": {
+    "variant": "amb_square",
+    "check_winrate": {
+      "assault": 0.49844492131616597,
+      "allround": 0.500562962962963,
+      "sniper": 0.5011341853035144
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 16.301546341000176
+  },
+  "amb_square_leave": {
+    "variant": "amb_square_leave",
+    "check_winrate": {
+      "assault": 0.49483118741058657,
+      "allround": 0.5008651851851852,
+      "sniper": 0.5048402555910544
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5887,
+      "sniper": 0.4467
+    },
+    "after_winrate": {
+      "assault": 0.5024,
+      "allround": 0.4997,
+      "sniper": 0.4976
+    },
+    "after_within_tolerance": true,
+    "seconds": 93.38263716800066
+  },
+  "amb_square_squad": {
+    "variant": "amb_square_squad",
+    "check_winrate": {
+      "assault": 0.4992646638054363,
+      "allround": 0.5001851851851852,
+      "sniper": 0.5005415335463259
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 18.878064317999815
+  },
+  "combo": {
+    "variant": "combo",
+    "check_winrate": {
+      "assault": 0.49553791130185976,
+      "allround": 0.49949333333333334,
+      "sniper": 0.5054920127795527
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5655,
+      "sniper": 0.4614
+    },
+    "after_winrate": {
+      "assault": 0.4973,
+      "allround": 0.5003,
+      "sniper": 0.5025
+    },
+    "after_within_tolerance": true,
+    "seconds": 129.78230663799968
+  },
+  "combo_real": {
+    "variant": "combo_real",
+    "check_winrate": {
+      "assault": 0.4945951359084406,
+      "allround": 0.49942962962962967,
+      "sniper": 0.5066741214057507
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5848,
+      "sniper": 0.4507
+    },
+    "after_winrate": {
+      "assault": 0.5,
+      "allround": 0.5005,
+      "sniper": 0.4994
+    },
+    "after_within_tolerance": true,
+    "seconds": 122.08096683099939
+  },
+  "leave_flat10": {
+    "variant": "leave_flat10",
+    "check_winrate": {
+      "assault": 0.4969356223175966,
+      "allround": 0.4994355555555556,
+      "sniper": 0.5040447284345048
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 16.08228994500041
+  },
+  "leave_flat20": {
+    "variant": "leave_flat20",
+    "check_winrate": {
+      "assault": 0.4955278969957082,
+      "allround": 0.4997837037037037,
+      "sniper": 0.5052332268370607
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5744,
+      "sniper": 0.444
+    },
+    "after_winrate": {
+      "assault": 0.5013,
+      "allround": 0.5003,
+      "sniper": 0.4983
+    },
+    "after_within_tolerance": true,
+    "seconds": 92.92911772099978
+  },
+  "leave_flat30": {
+    "variant": "leave_flat30",
+    "check_winrate": {
+      "assault": 0.49410300429184545,
+      "allround": 0.49851555555555555,
+      "sniper": 0.5081725239616613
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5926,
+      "sniper": 0.4377
+    },
+    "after_winrate": {
+      "assault": 0.5014,
+      "allround": 0.5007,
+      "sniper": 0.4977
+    },
+    "after_within_tolerance": true,
+    "seconds": 89.45682083199972
+  },
+  "leave_skill10": {
+    "variant": "leave_skill10",
+    "check_winrate": {
+      "assault": 0.4969356223175966,
+      "allround": 0.4994355555555556,
+      "sniper": 0.5040447284345048
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 16.06309768399933
+  },
+  "leave_skill20": {
+    "variant": "leave_skill20",
+    "check_winrate": {
+      "assault": 0.4955278969957082,
+      "allround": 0.4997837037037037,
+      "sniper": 0.5052332268370607
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5744,
+      "sniper": 0.444
+    },
+    "after_winrate": {
+      "assault": 0.5013,
+      "allround": 0.5003,
+      "sniper": 0.4983
+    },
+    "after_within_tolerance": true,
+    "seconds": 89.95804483999927
+  },
+  "leave_skill30": {
+    "variant": "leave_skill30",
+    "check_winrate": {
+      "assault": 0.49410300429184545,
+      "allround": 0.49851555555555555,
+      "sniper": 0.5081725239616613
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5926,
+      "sniper": 0.4377
+    },
+    "after_winrate": {
+      "assault": 0.5014,
+      "allround": 0.5007,
+      "sniper": 0.4977
+    },
+    "after_within_tolerance": true,
+    "seconds": 89.85860179600058
+  },
+  "squad30_b100": {
+    "variant": "squad30_b100",
+    "check_winrate": {
+      "assault": 0.49147210300429184,
+      "allround": 0.5001881481481482,
+      "sniper": 0.5076246006389776
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5846,
+      "sniper": 0.4615
+    },
+    "after_winrate": {
+      "assault": 0.4997,
+      "allround": 0.4987,
+      "sniper": 0.5
+    },
+    "after_within_tolerance": true,
+    "seconds": 111.52476330300033
+  },
+  "squad30_b25": {
+    "variant": "squad30_b25",
+    "check_winrate": {
+      "assault": 0.4952660944206008,
+      "allround": 0.5005214814814815,
+      "sniper": 0.5040511182108626
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 18.221559986000102
+  },
+  "squad30_b50": {
+    "variant": "squad30_b50",
+    "check_winrate": {
+      "assault": 0.4934120171673819,
+      "allround": 0.4994962962962963,
+      "sniper": 0.5067811501597445
+    },
+    "within_tolerance": false,
+    "recalibrated": true,
+    "capture": {
+      "assault": 0.5726,
+      "sniper": 0.468
+    },
+    "after_winrate": {
+      "assault": 0.4988,
+      "allround": 0.4994,
+      "sniper": 0.5008
+    },
+    "after_within_tolerance": true,
+    "seconds": 112.88978007199967
+  },
+  "squad30_p50_b0": {
+    "variant": "squad30_p50_b0",
+    "check_winrate": {
+      "assault": 0.5000615164520744,
+      "allround": 0.49875407407407407,
+      "sniper": 0.5012603833865814
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 17.61505793300057
+  },
+  "squad30_p50_b50": {
+    "variant": "squad30_p50_b50",
+    "check_winrate": {
+      "assault": 0.49706008583690986,
+      "allround": 0.49985333333333337,
+      "sniper": 0.5033722044728435
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 17.499321776000215
+  },
+  "squad30_r0": {
+    "variant": "squad30_r0",
+    "check_winrate": {
+      "assault": 0.4997396280400572,
+      "allround": 0.4992474074074074,
+      "sniper": 0.5010319488817891
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 17.861071257999356
+  },
+  "squad30_r5": {
+    "variant": "squad30_r5",
+    "check_winrate": {
+      "assault": 0.4997396280400572,
+      "allround": 0.4992474074074074,
+      "sniper": 0.5010319488817891
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 17.793933706000644
+  },
+  "squad60_r0": {
+    "variant": "squad60_r0",
+    "check_winrate": {
+      "assault": 0.4989527896995708,
+      "allround": 0.4998503703703704,
+      "sniper": 0.5011980830670927
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 19.812847928999872
+  },
+  "squad60_r5": {
+    "variant": "squad60_r5",
+    "check_winrate": {
+      "assault": 0.4989527896995708,
+      "allround": 0.4998503703703704,
+      "sniper": 0.5011980830670927
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 20.597557867000432
+  },
+  "steal15": {
+    "variant": "steal15",
+    "check_winrate": {
+      "assault": 0.49886409155937056,
+      "allround": 0.49964740740740743,
+      "sniper": 0.5016597444089457
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 19.460085152999454
+  },
+  "steal30": {
+    "variant": "steal30",
+    "check_winrate": {
+      "assault": 0.49886409155937056,
+      "allround": 0.49964740740740743,
+      "sniper": 0.5016597444089457
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 19.244441757999994
+  },
+  "steal50": {
+    "variant": "steal50",
+    "check_winrate": {
+      "assault": 0.49886409155937056,
+      "allround": 0.49964740740740743,
+      "sniper": 0.5016597444089457
+    },
+    "within_tolerance": true,
+    "recalibrated": false,
+    "capture": {
+      "assault": 0.5573,
+      "sniper": 0.4767
+    },
+    "seconds": 18.65022159900036
+  }
+}

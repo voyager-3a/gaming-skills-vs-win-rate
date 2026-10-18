@@ -1,0 +1,47 @@
+{
+  "name": "amb_coin_squad",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "amb_coin_squad",
+  "seed": 0,
+  "seconds": 18.837614738999946,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 62744,
+    "end_reason": {
+      "ticket": 0.9999840622210888,
+      "wipe": 0.0,
+      "turn_limit": 1.5937778911130944e-05
+    },
+    "ended_before_limit": 0.9999681244421778,
+    "turns_mean": 76.64092184113223,
+    "turns_p10_p50_p90": [
+      55.0,
+      75.0,
+      102.0
+    ],
+    "ticket_loss_share_kill": 0.6133053852185186,
+    "ticket_loss_share_capture": 0.38669461478148126,
+    "kills_per_game_per_team": 23.06003761315823,
+    "max_kills_one_game": 16,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.038872242764248374,
+    "outnumbered_rate": 0.00022312890475583322,
+    "ambush_per_turn": 0.21046453159006961,
+    "ambush_success": 0.6740650130968814,
+    "ambush_kill_rate": 0.37574759923444256,
+    "ambush_share_of_kills": 0.1314152738411436,
+    "team_a_winrate": 0.4972427642483743,
+    "leaves_per_game": 0.0
+  },
+  "outnumbered_carry": {
+    "n": 14,
+    "s_mean": 0.6824483056570755,
+    "style_counts": {
+      "assault": 8,
+      "allround": 4,
+      "sniper": 2
+    }
+  }
+}
