@@ -1,0 +1,46 @@
+{
+  "name": "squad60_r5",
+  "q": 0.05,
+  "k": 0.5,
+  "sigma": 1.0,
+  "variant": "squad60_r5",
+  "seed": 0,
+  "seconds": 19.368792485000085,
+  "crossover": Infinity,
+  "summary": {
+    "n_games": 63302,
+    "end_reason": {
+      "ticket": 0.9999842027108148,
+      "wipe": 0.0,
+      "turn_limit": 1.5797289185175824e-05
+    },
+    "ended_before_limit": 0.9999842027108148,
+    "turns_mean": 74.6483365454488,
+    "turns_p10_p50_p90": [
+      53.0,
+      72.0,
+      100.0
+    ],
+    "ticket_loss_share_kill": 0.6087375529378259,
+    "ticket_loss_share_capture": 0.39126244706217417,
+    "kills_per_game_per_team": 22.52274019778206,
+    "max_kills_one_game": 15,
+    "max_deaths_one_game": 3,
+    "comeback_rate": 0.03521215759375691,
+    "outnumbered_rate": 0.0001263783134814066,
+    "ambush_per_turn": 0.21094157539199418,
+    "ambush_success": 0.6706789154287652,
+    "ambush_kill_rate": 0.3743139164972045,
+    "ambush_share_of_kills": 0.13084799448985768,
+    "team_a_winrate": 0.4989573789137784,
+    "leaves_per_game": 0.0
+  },
+  "outnumbered_carry": {
+    "n": 8,
+    "s_mean": 0.6201619862556986,
+    "style_counts": {
+      "assault": 6,
+      "allround": 2
+    }
+  }
+}
