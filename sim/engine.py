@@ -28,6 +28,7 @@ class GameResults:
     ambush: np.ndarray       # (B,) 기습 횟수
     ambush_win: np.ndarray   # (B,) 기습한 쪽이 교전에서 이긴 횟수
     ambush_kill: np.ndarray  # (B,) 기습으로 나온 킬
+    leaves: np.ndarray       # (B,) 이탈 횟수
 
 
 def _pick(weights: np.ndarray, u: np.ndarray) -> np.ndarray:
@@ -50,9 +51,11 @@ def _pick_ambush(aw: np.ndarray, tw: np.ndarray, u: np.ndarray, rows: np.ndarray
 
 
 def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
-               rng: np.random.Generator, steal_rng: np.random.Generator | None = None) -> GameResults:
+               rng: np.random.Generator, steal_rng: np.random.Generator | None = None,
+               p_leave: np.ndarray | None = None, leave_rng: np.random.Generator | None = None) -> GameResults:
     """power = s + e, style은 슬롯별 값 (B, 2×team_size). 앞 절반이 A팀.
-    킬 스틸은 steal_rng로만 뽑으므로, 같은 rng면 p_steal과 무관하게 승패·데스가 같다."""
+    킬 스틸은 steal_rng로만 뽑으므로, 같은 rng면 p_steal과 무관하게 승패·데스가 같다.
+    p_leave: 슬롯별 이탈 확률 (B, P). 죽을 때마다 이 확률로 판을 나가고 남은 목숨을 버린다 (leave_rng로 뽑음)."""
     B, P = power.shape
     ts = P // 2
     T, d, c = float(sim["tickets"]), float(sim["ticket_per_death"]), float(sim["capture_coef"])
@@ -83,6 +86,7 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
     n_amb = np.zeros(B, dtype=np.int32)
     n_amb_win = np.zeros(B, dtype=np.int32)
     n_amb_kill = np.zeros(B, dtype=np.int32)
+    n_leave = np.zeros(B, dtype=np.int32)
 
     for t in range(K):
         act = ~done
@@ -145,6 +149,12 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
         lives[r, los[die]] -= 1
         deaths[r, los[die]] += 1
         kills[r, credit[die]] += 1
+
+        # 5''. 이탈: 죽은 유저가 확률 p_leave로 판을 나간다 (티켓 추가 감소 없음)
+        if p_leave is not None:
+            lv = die & (leave_rng.random(B) < p_leave[rows, los])
+            lives[rows[lv], los[lv]] = 0
+            n_leave += lv
         tickets[r, (los[die] >= ts).astype(np.int64)] -= d
         loss_kill[die] += d
 
@@ -197,4 +207,4 @@ def play_games(power: np.ndarray, style: np.ndarray, sp: StyleParams, sim: dict,
                        reason=reason, tickets=tickets, loss_kill=loss_kill, loss_cap=loss_cap,
                        winner_max_deficit=max_def[rows, winner],
                        winner_max_alive_deficit=max_alive_def[rows, winner],
-                       ambush=n_amb, ambush_win=n_amb_win, ambush_kill=n_amb_kill)
+                       ambush=n_amb, ambush_win=n_amb_win, ambush_kill=n_amb_kill, leaves=n_leave)

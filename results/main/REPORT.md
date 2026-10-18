@@ -172,16 +172,6 @@ k별 (q = 0.05, σ = 1):
 | 2.328 | 0.000 | allround | 8027 | 14 | 1294 | 131 |
 | 1.298 | 0.000 | assault | 17255 | 14 | 514 | 122 |
 
-**game_max_deaths**
-
-| s | e | style | game | turns | max_deaths | max_deaths_user |
-|---|---|---|---|---|---|---|
-| -0.900 | 0.000 | sniper | 0 | 93 | 3 | 1412 |
-| -0.451 | 0.000 | sniper | 1 | 93 | 3 | 1960 |
-| -1.345 | 0.000 | allround | 2 | 105 | 3 | 1265 |
-| -0.852 | 0.000 | assault | 3 | 99 | 3 | 1793 |
-| 0.151 | 0.000 | sniper | 4 | 56 | 3 | 683 |
-
 **game_longest**
 
 | game | turns | reason | tickets_a | tickets_b |

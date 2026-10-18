@@ -24,8 +24,8 @@ from sim.model import ROOT, STYLES, calibration_key, load_config  # noqa: E402
 from sim.runner import run  # noqa: E402
 
 OUT = ROOT / "results" / "main"
-# 승패가 바뀌지 않는 변형은 base 보정값을 그대로 쓴다
-SAME_CALIBRATION_AS_BASE = ("steal30",)
+# 민감도 변형은 scripts/run_sensitivity.py가 점검 후 필요할 때만 보정한다
+SAME_CALIBRATION_AS_BASE = ()
 
 
 def jobs(cfg):
@@ -41,7 +41,10 @@ def jobs(cfg):
     for seed in g["base_seeds"][1:]:
         out.append(dict(name=f"base_seed{seed}", q=g["base_q"], k=g["base_k"], sigma=g["base_sigma"],
                         variant=None, seed=seed))
+    sens = {v for group in cfg.get("sensitivity", {}).values() for v in group}
     for v in cfg.get("variants", {}):
+        if v in sens:
+            continue
         out.append(dict(name=v, q=g["base_q"], k=g["base_k"], sigma=g["base_sigma"], variant=v,
                         seed=g["base_seeds"][0]))
     return out
@@ -73,10 +76,8 @@ def outliers(res, top):
     g = res.games
     who = lambda col: df.set_index("user").loc[g[col]].reset_index(drop=True)[["s", "e", "style"]]  # noqa: E731
     gk = pd.concat([g[["game", "max_kills", "max_kills_user", "turns"]], who("max_kills_user")], axis=1)
-    gd = pd.concat([g[["game", "max_deaths", "max_deaths_user", "turns"]], who("max_deaths_user")], axis=1)
     lists += [
         ("game_max_kills", gk.nlargest(top, "max_kills")),
-        ("game_max_deaths", gd.nlargest(top, "max_deaths")),
         ("game_longest", g.nlargest(top, "turns")[["game", "turns", "reason", "tickets_a", "tickets_b"]]),
         ("game_ticket_comeback", g[g["comeback"]].nlargest(top, "winner_max_deficit")[
             ["game", "winner_max_deficit", "turns", "tickets_a", "tickets_b"]]),
@@ -122,8 +123,9 @@ def main():
         if not a.skip_calibration:
             t0 = time.perf_counter()
             cal_jobs = [(k, None) for k in cfg["grid"]["k"] if k != 0]
+            sens = {v for group in cfg.get("sensitivity", {}).values() for v in group}
             cal_jobs += [(cfg["grid"]["base_k"], v) for v in cfg.get("variants", {})
-                         if v not in SAME_CALIBRATION_AS_BASE]
+                         if v not in SAME_CALIBRATION_AS_BASE and v not in sens]
             cal = pool.map(_calibrate_job, cal_jobs)
             entries = {r["key"]: r["capture"] for r in cal}
             base_key = calibration_key(None, cfg["grid"]["base_k"])

@@ -90,4 +90,5 @@ def game_summary(res: RunResult, turn_limit: int) -> dict:
         "ambush_kill_rate": float(g["ambush_kill"].sum() / max(g["ambush"].sum(), 1)),
         "ambush_share_of_kills": float(g["ambush_kill"].sum() / (g["kills_a"] + g["kills_b"]).sum()),
         "team_a_winrate": float((g["winner"] == 0).mean()),
+        "leaves_per_game": float(g["leaves"].mean()) if "leaves" in g else 0.0,
     }

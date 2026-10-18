@@ -93,3 +93,32 @@ def test_kill_steal_keeps_outcomes():
     assert a.kills.sum() == b.kills.sum() and not np.array_equal(a.kills, b.kills)
     for col in ["kills_a", "kills_b", "deaths_a", "deaths_b", "winner", "turns"]:
         assert a.games[col].equals(b.games[col])
+
+
+def test_squads_same_team_and_skill_corr():
+    r = _run(n_users=640, max_games=60, checkpoints=[60],
+             sim_overrides={"squad_frac": 0.6, "squad_corr": 0.5})
+    sq, sch = r.squad, r.schedule
+    assert abs((sq >= 0).mean() - 0.6) < 0.01
+    team = np.where(np.arange(32) < 16, 0, 1)
+    for g in sch[:500]:
+        ids = sq[g]
+        for s in set(ids[ids >= 0]):
+            assert len(set(team[ids == s])) == 1  # 분대는 쪼개지지 않는다
+    games = np.bincount(sch.ravel(), minlength=640)
+    assert games.min() >= 60
+    # 분대원 쌍의 실력 상관 ≈ 0.5
+    pairs = [(a, b) for s in range(sq.max() + 1) for a, b in [tuple(np.flatnonzero(sq == s)[:2])]]
+    a, b = np.array(pairs).T
+    assert abs(np.corrcoef(r.users.s[a], r.users.s[b])[0, 1] - 0.5) < 0.15
+
+
+def test_leave_mechanics():
+    base = _run(n_users=320, max_games=50, checkpoints=[50])
+    same = _run(n_users=320, max_games=50, checkpoints=[50], sim_overrides={"p_leave": 0.0})
+    assert np.array_equal(base.wins, same.wins) and np.array_equal(base.kills, same.kills)
+    allout = _run(n_users=320, max_games=50, checkpoints=[50], sim_overrides={"p_leave": 1.0})
+    # 죽으면 반드시 나가므로 판당 데스는 최대 1, 이탈 수 = 데스 수
+    g = allout.games
+    assert (g["leaves"] == g["deaths_a"] + g["deaths_b"]).all()
+    assert allout.deaths[-1].max() <= 50

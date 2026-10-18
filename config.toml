@@ -56,8 +56,75 @@ p_ambush = 0.0
 [variants.one_life]
 lives = 1
 
+# --- 민감도 (값은 근거 없는 임의값이라 범위 전체를 보고한다. 묶음은 [sensitivity]) ---
+# 킬 스틸: 킬 기록이 같은 팀 다른 생존자에게 갈 확률
+[variants.steal15]
+p_steal = 0.15
+
 [variants.steal30]
-p_steal = 0.3             # 승패가 그대로라 보정값은 base와 같다
+p_steal = 0.3
+
+[variants.steal50]
+p_steal = 0.5
+
+# 이탈: 죽을 때마다 p_leave로 그 판을 나가고 남은 목숨을 버린다
+# flat = 모든 유저 base, skill = 2 × base × Φ(−s)
+[variants.leave_flat10]
+p_leave = 0.1
+leave_mode = "flat"
+
+[variants.leave_flat20]
+p_leave = 0.2
+leave_mode = "flat"
+
+[variants.leave_flat30]
+p_leave = 0.3
+leave_mode = "flat"
+
+[variants.leave_skill10]
+p_leave = 0.1
+leave_mode = "skill"
+
+[variants.leave_skill20]
+p_leave = 0.2
+leave_mode = "skill"
+
+[variants.leave_skill30]
+p_leave = 0.3
+leave_mode = "skill"
+
+# 분대: 유저 squad_frac을 2~4명 분대로 묶어 항상 같은 팀. 분대원 실력 상관 squad_corr. 협동 보너스 없음
+[variants.squad30_r0]
+squad_frac = 0.3
+squad_corr = 0.0
+
+[variants.squad30_r5]
+squad_frac = 0.3
+squad_corr = 0.5
+
+[variants.squad60_r0]
+squad_frac = 0.6
+squad_corr = 0.0
+
+[variants.squad60_r5]
+squad_frac = 0.6
+squad_corr = 0.5
+
+# 동시 적용: 킬 스틸 0.3 + 이탈(실력 연동 0.2) + 분대(0.3, 상관 0)
+[variants.combo]
+p_steal = 0.3
+p_leave = 0.2
+leave_mode = "skill"
+squad_frac = 0.3
+squad_corr = 0.0
+
+# 민감도 묶음 ("base" = 기본 설정 시드 0 실행)
+[sensitivity]
+steal = ["base", "steal15", "steal30", "steal50"]
+leave_flat = ["base", "leave_flat10", "leave_flat20", "leave_flat30"]
+leave_skill = ["base", "leave_skill10", "leave_skill20", "leave_skill30"]
+squad = ["base", "squad30_r0", "squad30_r5", "squad60_r0", "squad60_r5"]
+combo = ["base", "combo"]
 
 # 보정 결과: k별 돌격·저격 점령 가중치 (k 적용 후의 최종값). 비어 있으면 위 표 + k 규칙 사용.
 [calibration]
@@ -73,7 +140,6 @@ seed = 7
 "kill69:k=0.5" = { assault = 0.581, sniper = 0.4597 }
 "no_ambush:k=0.5" = { assault = 0.5604, sniper = 0.4786 }
 "one_life:k=0.5" = { assault = 0.75, sniper = 0.3 }
-"steal30:k=0.5" = { assault = 0.5601, sniper = 0.4754 }
 
 [grid]
 q = [0.0, 0.05, 0.15]

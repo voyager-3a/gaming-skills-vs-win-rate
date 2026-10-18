@@ -8,7 +8,10 @@ import numpy as np
 import pandas as pd
 
 from .engine import play_games
-from .model import Users, make_schedule, make_users, style_params
+from scipy.stats import norm
+
+from .model import (Users, correlate_squad_skill, make_schedule, make_schedule_squads, make_squads,
+                    make_users, style_params)
 
 
 @dataclass
@@ -20,6 +23,8 @@ class RunResult:
     deaths: np.ndarray   # (체크포인트, 유저) 누적 데스
     games: pd.DataFrame  # 판 단위 기록
     seconds: float
+    squad: np.ndarray | None = None  # 유저별 분대 번호 (-1 = 솔로)
+    schedule: np.ndarray | None = None  # (판, 32) 유저 배치
 
     def winrate(self, i: int) -> np.ndarray:
         return self.wins[i] / self.checkpoints[i]
@@ -45,11 +50,33 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
     users = make_users(n_users, q, sim["equip_strength"], rng)
     if zero_style:
         users.style[:] = 1
+    ts = int(sim["team_size"])
+
+    # 분대 (별도 난수: 분대가 없으면 기본 실행과 같다)
+    squad_frac = float(sim.get("squad_frac", 0.0))
+    squad = np.full(n_users, -1)
+    if squad_frac > 0:
+        squad_rng = np.random.default_rng([seed, 3])
+        squad = make_squads(n_users, squad_frac, squad_rng)
+        users.s = correlate_squad_skill(users.s, squad, float(sim.get("squad_corr", 0.0)), squad_rng)
+
     sp = style_params(cfg, k, capture_override, variant)
     power_u = np.zeros(n_users) if zero_power else users.s + users.e
 
-    ts = int(sim["team_size"])
-    sched = make_schedule(n_users, max_games, ts, rng)
+    # 이탈 확률: flat = base, skill = 2 × base × Φ(−s)
+    p_leave_base = float(sim.get("p_leave", 0.0))
+    leave_u, leave_rng = None, None
+    if p_leave_base > 0:
+        s_eff = np.zeros(n_users) if zero_power else users.s
+        mode = sim.get("leave_mode", "flat")
+        leave_u = (np.full(n_users, p_leave_base) if mode == "flat"
+                   else 2 * p_leave_base * norm.cdf(-s_eff))
+        leave_rng = np.random.default_rng([seed, 2])
+
+    if squad_frac > 0:
+        sched = make_schedule_squads(n_users, max_games, ts, squad, rng)
+    else:
+        sched = make_schedule(n_users, max_games, ts, rng)
     per_round = n_users // (2 * ts)
     chunk = max(1, int(sim["chunk_games"]) // per_round) * per_round
 
@@ -62,7 +89,8 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
 
     for start in range(0, len(sched), chunk):
         su = sched[start:start + chunk]
-        res = play_games(power_u[su], users.style[su], sp, sim, rng, steal_rng)
+        res = play_games(power_u[su], users.style[su], sp, sim, rng, steal_rng,
+                         None if leave_u is None else leave_u[su], leave_rng)
         for r0 in range(0, len(su), per_round):
             ru = su[r0:r0 + per_round].ravel()
             sl = slice(r0, r0 + per_round)
@@ -104,10 +132,11 @@ def run(cfg: dict, *, n_users: int, max_games: int, checkpoints: list[int], q: f
             "ambush": res.ambush,
             "ambush_win": res.ambush_win,
             "ambush_kill": res.ambush_kill,
+            "leaves": res.leaves,
         }))
 
     games = pd.concat(records, ignore_index=True)
     games["comeback"] = games["winner_max_deficit"] >= sim["comeback_deficit"]
     games["outnumbered"] = games["winner_max_alive_deficit"] >= sim["outnumbered_deficit"]
     return RunResult(users=users, checkpoints=cps, wins=snap[0], kills=snap[1], deaths=snap[2],
-                     games=games, seconds=time.perf_counter() - t0)
+                     games=games, seconds=time.perf_counter() - t0, squad=squad, schedule=sched)

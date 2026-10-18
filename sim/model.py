@@ -68,6 +68,81 @@ def make_users(n: int, q: float, m: float, rng: np.random.Generator) -> Users:
     return Users(s=s, e=e, style=style)
 
 
+def make_squads(n: int, frac: float, rng: np.random.Generator) -> np.ndarray:
+    """유저의 약 frac을 2~4명 분대로 묶는다. 반환: 유저별 분대 번호 (-1 = 솔로)."""
+    squad = np.full(n, -1)
+    order = rng.permutation(n)
+    target, pos, sid = int(round(frac * n)), 0, 0
+    while pos < target:
+        size = min(int(rng.integers(2, 5)), target - pos)
+        if size < 2:
+            break
+        squad[order[pos:pos + size]] = sid
+        pos, sid = pos + size, sid + 1
+    return squad
+
+
+def correlate_squad_skill(s: np.ndarray, squad: np.ndarray, rho: float, rng: np.random.Generator) -> np.ndarray:
+    """분대원끼리 실력 상관이 rho가 되도록 분대원의 s를 다시 뽑는다 (주변분포는 N(0, 1) 그대로)."""
+    s = s.copy()
+    m = squad >= 0
+    if rho > 0 and m.any():
+        shared = rng.standard_normal(squad.max() + 1)
+        s[m] = np.sqrt(rho) * shared[squad[m]] + np.sqrt(1 - rho) * rng.standard_normal(m.sum())
+    return s
+
+
+def make_schedule_squads(n: int, max_games: int, team_size: int, squad: np.ndarray,
+                         rng: np.random.Generator) -> np.ndarray:
+    """make_schedule과 같되, 분대는 쪼개지 않고 항상 같은 팀에 넣는다.
+
+    라운드마다 판수가 적은 단위(분대 또는 솔로)부터 정원까지 뽑고, 분대를 큰 것부터
+    빈자리가 충분한 무작위 팀에 넣은 뒤 솔로로 채운다. 팀 순서를 섞어 판(A팀, B팀)을 만든다.
+    """
+    per_game = 2 * team_size
+    n_games = n // per_game
+    per_round = n_games * per_game
+    solo = np.flatnonzero(squad < 0)
+    units = [np.flatnonzero(squad == i) for i in range(squad.max() + 1)] + [np.array([u]) for u in solo]
+    sizes = np.array([len(u) for u in units])
+    games = np.zeros(n, dtype=np.int64)
+    rounds = []
+    while games.min() < max_games:
+        ug = np.array([games[u[0]] for u in units])
+        order = np.argsort(ug + rng.random(len(units)), kind="stable")
+        chosen, filled = [], 0
+        for i in order:
+            if filled + sizes[i] <= per_round:
+                chosen.append(i)
+                filled += sizes[i]
+                if filled == per_round:
+                    break
+        teams = [[] for _ in range(2 * n_games)]
+        room = np.full(2 * n_games, team_size)
+        leftover = []
+        for i in sorted(chosen, key=lambda i: -sizes[i]):
+            ok = np.flatnonzero(room >= sizes[i])
+            if len(ok) == 0:
+                leftover.append(i)
+                continue
+            t = ok[rng.integers(len(ok))] if sizes[i] > 1 else ok[0]
+            teams[t].extend(units[i].tolist())
+            room[t] -= sizes[i]
+        if leftover:  # 분대가 들어갈 자리가 없으면 그 분대는 이번 라운드를 쉬고 솔로로 채운다
+            rest = [i for i in order if i not in set(chosen) and sizes[i] == 1]
+            for t in np.flatnonzero(room > 0):
+                while room[t] > 0 and rest:
+                    teams[t].append(int(units[rest.pop(0)][0]))
+                    room[t] -= 1
+        if (room > 0).any():
+            raise RuntimeError("분대 배치 실패: 솔로가 부족하다")
+        tarr = np.array([rng.permutation(t) for t in teams])[rng.permutation(2 * n_games)]
+        rnd = tarr.reshape(n_games, per_game)
+        games[rnd.ravel()] += 1
+        rounds.append(rnd)
+    return np.concatenate(rounds)
+
+
 def make_schedule(n: int, max_games: int, team_size: int, rng: np.random.Generator) -> np.ndarray:
     """라운드마다 유저를 섞어 2×team_size명씩 묶는다. 남는 인원은 쉰다.
 
